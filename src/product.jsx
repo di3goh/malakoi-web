@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ChevronRight, MessageCircle, Minus, Plus, ShoppingBag } from 'lucide-react';
 import StoreHeader from './components/StoreHeader.jsx';
@@ -11,7 +11,7 @@ import './product.css';
 
 const allProducts = [...products, ...lowerProducts];
 const slug = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-const productHref = (name) => `/producto.html?item=${encodeURIComponent(slug(name))}`;
+const productHref = (name) => name === 'KIMONO JACKET' ? '/kimono-jacket.html' : `/producto.html?item=${encodeURIComponent(slug(name))}`;
 
 function ProductPage() {
   useScrollReveal();
@@ -21,8 +21,9 @@ function ProductPage() {
   const isMori = product.name === 'MORI DENIM JACKET';
   const isKnot = product.name === 'KNOT ZIP-UP JACKET';
   const isLotus = product.name === 'CAMISA LOTUS';
-  const [variant, setVariant] = useState(() => isKnot || isLotus ? product.colors[0] : null);
-  const [size, setSize] = useState(isKnot || isLotus ? 'Estándar' : 'S/M');
+  const isKimono = product.name === 'KIMONO JACKET';
+  const [variant, setVariant] = useState(() => isKnot || isLotus || isKimono ? product.colors[0] : null);
+  const [size, setSize] = useState(isKnot || isLotus || isKimono ? 'Estándar' : 'S/M');
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [currency, setCurrency] = useState(readCurrency);
@@ -30,6 +31,21 @@ function ProductPage() {
   const image = variant?.image || product.image;
   const price = product.price || 145;
   const recommendations = allProducts.filter((item) => item.name !== product.name).slice(0, 5);
+  useEffect(() => {
+    const title = `${product.name} · Malakoi`;
+    const description = product.description || `Descubre ${product.name} en Malakoi. ${product.alt}.`;
+    document.title = title;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', title);
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
+    document.querySelector('meta[property="og:image"]')?.setAttribute('content', new URL(image, window.location.origin).href);
+    document.querySelector('meta[property="og:image:alt"]')?.setAttribute('content', product.alt);
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', window.location.href);
+    document.querySelector('meta[property="product:price:amount"]')?.setAttribute('content', String(price));
+    document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', title);
+    document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', description);
+    document.querySelector('meta[name="twitter:image"]')?.setAttribute('content', new URL(image, window.location.origin).href);
+  }, [product, image, price]);
   const whatsappText = `Hola Malakoi, quiero pedir ${product.name}${variant ? ` en color ${variant.name}` : ''}, talla ${size}, cantidad ${quantity}.`;
   const whatsappHref = `https://wa.me/51906575746?text=${encodeURIComponent(whatsappText)}`;
 
@@ -68,6 +84,7 @@ function ProductPage() {
           <a className="product-whatsapp-button" href={whatsappHref} target="_blank" rel="noreferrer"><MessageCircle size={18} />Pedir por WhatsApp</a>
 
           {isMori && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">MATERIAL: DENIM 10 ONZAS 100% ALGODON</p><h3>TALLAS Y MEDIDAS</h3><div className="measurement"><strong>Estándar (equivalente a una S o M)</strong><p>Largo 61 cm · Ancho 62 cm · Hombro 24 cm · Manga 50 cm</p></div><div className="measurement"><strong>Talla L</strong><p>Largo 65 cm · Ancho 64 cm · Hombro 25,5 cm · Manga 53 cm</p></div></section>}
+          {isKimono && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">MATERIAL: RAW DENIM · PRENDA UNISEX</p><h3>TALLAS Y MEDIDAS</h3><div className="measurement"><strong>Estándar</strong><p>Largo 60 cm · Ancho 63 cm</p></div><div className="measurement"><strong>Talla L</strong><p>Largo 65 cm · Ancho 64 cm</p></div></section>}
           {isLotus && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">MATERIAL: DENIM 5 ONZAS</p><p className="material-label">Botones chinos hechos de cordón elástico · Corte boxy · Botones de camisa convencionales.</p><h3>TALLA ÚNICA ESTÁNDAR</h3><div className="measurement"><strong>Estándar</strong><p>Largo 61 cm · Ancho 60 cm</p></div></section>}
           {isKnot && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">MATERIAL: FRANELA 20/1. CONTIENE REACTIVO, ANTIPEELING Y NO SE DEFORMA.</p><p className="material-label">Nudos de cordones de algodón.</p><h3>TALLAS Y MEDIDAS</h3><div className="measurement"><strong>Estándar</strong><p>Largo 57 cm · Ancho axila a axila 60 cm · Manga 55 cm (sin contar el hombro) · Hombro 18 cm · Cintura 60 cm regulable</p></div><div className="measurement"><strong>Talla L</strong><p>Largo 62 cm · Ancho axila a axila 63 cm · Manga 58 cm · Hombro 19 cm · Cintura 62 cm</p></div></section>}
         </section>

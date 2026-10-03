@@ -10,7 +10,7 @@ import './styles.css';
 import './catalog.css';
 
 const allProducts = [...products, ...lowerProducts];
-const productHref = (name) => `/producto.html?item=${encodeURIComponent(name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}`;
+const productHref = (name) => name === 'KIMONO JACKET' ? '/kimono-jacket.html' : `/producto.html?item=${encodeURIComponent(name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}`;
 const filters = [
   ['all', 'Todas las prendas'], ['CHAQUETAS', 'Chaquetas'], ['DENIM', 'Denim'],
   ['PANTALONES', 'Pantalones'], ['CAMISAS', 'Camisas'], ['BÁSICOS', 'Tops'], ['POLOS', 'Polos'],

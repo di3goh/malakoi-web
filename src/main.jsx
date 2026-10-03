@@ -9,7 +9,7 @@ import useScrollReveal from './useScrollReveal.js';
 import { products, lowerProducts } from './data/products.js';
 import './styles.css';
 
-const productHref = (name) => `/producto.html?item=${encodeURIComponent(name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}`;
+const productHref = (name) => name === 'KIMONO JACKET' ? '/kimono-jacket.html' : `/producto.html?item=${encodeURIComponent(name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}`;
 
 gsap.registerPlugin(ScrollToPlugin);
 
