@@ -1,43 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowDown, ArrowRight, Heart, Menu, Search, ShoppingBag, X } from 'lucide-react';
+import { ArrowDown, ArrowRight, Heart } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import StoreHeader, { SocialLinks } from './components/StoreHeader.jsx';
+import { products, lowerProducts } from './data/products.js';
 import './styles.css';
 
 gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
-const products = [
-  { name: 'KIMONO JACKET', category: 'CHAQUETAS', image: '/1.png', alt: 'Chaqueta Kimono negra de corte amplio', colors: [{ name: 'Negro', value: '#171717' }, { name: 'Hueso', value: '#e5ded0' }, { name: 'Oliva', value: '#676b50' }] },
-  { name: 'J-JACKET', category: 'ESENCIALES', image: '/2.png', alt: 'Chaqueta J negra de estilo urbano', colors: [{ name: 'Negro', value: '#171717' }, { name: 'Gris', value: '#aaa9a4' }, { name: 'Oliva', value: '#676b50' }, { name: 'Vino', value: '#673c43' }] },
-  { name: 'MORI DENIM JACKET', category: 'DENIM', image: '/3.png', alt: 'Chaqueta denim azul Mori', colors: [{ name: 'Azul lavado', value: '#546579' }, { name: 'Índigo', value: '#28394d' }, { name: 'Negro', value: '#252525' }] },
-  { name: 'KNOT ZIP-UP JACKET', category: 'CAPAS LIGERAS', image: '/4.png', alt: 'Chaqueta ligera con cierre frontal', colors: [{ name: 'Gris', value: '#aaa9a4' }, { name: 'Negro', value: '#171717' }, { name: 'Hueso', value: '#e5ded0' }] },
-];
-const lowerProducts = [
-  { ...products[0], name: 'PARACHUTE JOGGER', category: 'PANTALONES', image: '/assets/images/parachute.png', alt: 'Parachute jogger gris de pierna amplia' },
-  { ...products[1], name: 'CAMISA LOTUS', category: 'CAMISAS', image: '/assets/images/lotus.png', alt: 'Camisa Lotus negra con cierres orientales' },
-  { ...products[2], name: 'CLASP JACKET', category: 'CHAQUETAS', image: '/assets/images/clasp-jacket.png', alt: 'Clasp Jacket negra con cierres metálicos' },
-  { ...products[3], name: 'KIMONO V3', category: 'CHAQUETAS', image: '/assets/images/kimono-v3.png', alt: 'Kimono V3 negro de manga amplia' },
-  { ...products[0], name: 'BASIC TANK TOP', category: 'BÁSICOS', image: '/assets/images/basic-tank-top.png', alt: 'Basic Tank Top Malakoi en cuatro colores' },
-  { ...products[1], name: 'POLO 3/4', category: 'POLOS', image: '/assets/images/polo-34.png', alt: 'Polos Malakoi de manga tres cuartos' },
-  { ...products[2], name: 'WIDE RAW DENIM PANTS', category: 'DENIM', image: '/assets/images/wide-raw.png', alt: 'Pantalón Wide Raw Denim negro de pierna amplia' },
-  { ...products[3], name: 'WIDE BAGGY CORDUROY', category: 'PANTALONES', image: '/assets/images/wide-baggy.png', alt: 'Pantalón Wide Baggy de pana color café' },
-];
-
-function SocialLinks({ className }) {
-  return <nav className={className} aria-label="Redes sociales">
-    <a href="https://www.tiktok.com/" aria-label="TikTok" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.6 7.1a6.9 6.9 0 0 1-4.2-1.5v8.1a6.2 6.2 0 1 1-5.4-6.1v3.4a2.9 2.9 0 1 0 2.1 2.8V2.5h3.3c.2 2.2 1.8 4 4.2 4.3z" fill="currentColor" /></svg></a>
-    <a href="https://www.instagram.com/" aria-label="Instagram" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" strokeWidth="2" /><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="2" /><circle cx="17.6" cy="6.6" r="1.2" fill="currentColor" /></svg></a>
-    <a href="https://www.facebook.com/" aria-label="Facebook" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.1H7.3V13h2.8v8z" /></svg></a>
-  </nav>;
-}
-
 function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [saved, setSaved] = useState([]);
+  const [heroSlide, setHeroSlide] = useState(0);
   const hero = useRef(null);
-  const navLinks = [['Novedades', '#novedades'], ['Catálogo', '/catalogo.html'], ['Contacto', '/contacto.html']];
+
+  useEffect(() => {
+    const tabletOrSmaller = window.matchMedia('(max-width: 1024px)');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!tabletOrSmaller.matches || reduceMotion) return;
+    const timer = window.setInterval(() => setHeroSlide((current) => (current + 1) % 3), 4800);
+    return () => window.clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -80,7 +64,6 @@ function App() {
       resetWheelTarget();
       wheelTarget = Math.max(0, target.getBoundingClientRect().top + window.scrollY - 90);
       wheelTween = gsap.to(window, { duration: 1.15, scrollTo: { y: target, offsetY: 90, autoKill: false }, ease: 'power2.inOut', overwrite: true, onComplete: () => { wheelTarget = window.scrollY; wheelTween = null; } });
-      setMenuOpen(false);
     };
     window.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('pointerdown', resetWheelTarget, { passive: true });
@@ -94,21 +77,7 @@ function App() {
 
   return <>
     <a className="skip-link" href="#contenido">Saltar al contenido</a>
-    <div className="announcement">
-      <p className="announcement-message">TE AMO, PERO ESCOJO MALAKOI <span aria-hidden="true">♥</span></p>
-      <SocialLinks className="social-links" />
-    </div>
-    <header className="site-header">
-      <a className="brand" href="/" aria-label="Malakoi, ir al inicio"><img src="/imagen_2026-10-02_215000798-Photoroom.png" alt="Malakoi" /></a>
-      <nav className={`primary-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Navegación principal">
-        {navLinks.map(([label, href]) => <a key={label} href={href}>{label}</a>)}
-      </nav>
-      <div className="header-actions">
-        <a className="icon-link search-link" href="/catalogo.html" aria-label="Buscar en el catálogo"><Search size={19} strokeWidth={1.7} /></a>
-        <a className="bag-link" href="/carrito.html"><ShoppingBag size={19} strokeWidth={1.7} aria-hidden="true" /><span>Bolsa</span></a>
-        <button className="menu-toggle" type="button" aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
-      </div>
-    </header>
+    <StoreHeader active="home" />
     <main id="contenido">
       <section className="hero" ref={hero} aria-labelledby="hero-title">
         <picture className="hero-media">
@@ -116,15 +85,21 @@ function App() {
           <source media="(max-width: 700px)" srcSet="/MALAKOI-BANNER.png" />
           <img src="/MALAKOI-BANNER.png" alt="Campaña Malakoi: prendas contemporáneas en una composición editorial" fetchPriority="high" />
         </picture>
+        <div className="hero-mobile-carousel" aria-label="Campañas Malakoi" aria-roledescription="carrusel">
+          {['/assets/images/hero-mobile-1.png', '/assets/images/hero-mobile-2.png', '/assets/images/hero-mobile-3.png'].map((image, index) => <img key={image} className={heroSlide === index ? 'is-active' : ''} src={image} alt={['Look Malakoi con polo blanco y denim amplio', 'Look Malakoi con top negro y bolso estampado', 'Look Malakoi con tank top verde oliva y denim'][index]} loading={index === 0 ? 'eager' : 'lazy'} />)}
+        </div>
         <div className="hero-shade" />
         <div className="hero-copy">
           <div className="hero-label"><h1 id="hero-title">Prendas con carácter para todos los días.</h1></div>
           <a className="button hero-button" href="/catalogo.html">Ver catálogo <ArrowRight size={17} aria-hidden="true" /></a>
         </div>
+        <div className="hero-pagination" role="group" aria-label="Elegir imagen de campaña">
+          {[0, 1, 2].map((index) => <button key={index} type="button" className={heroSlide === index ? 'is-active' : ''} aria-label={`Mostrar imagen ${index + 1}`} aria-pressed={heroSlide === index} onClick={() => setHeroSlide(index)} />)}
+        </div>
         <a className="hero-scroll" href="#novedades"><span>Desliza para explorar</span><ArrowDown size={16} aria-hidden="true" /></a>
       </section>
       <section className="section products-section" id="novedades" aria-labelledby="products-title" data-reveal>
-        <div className="section-heading"><div><p className="eyebrow">Selección Malakoi</p><h2 id="products-title">Para cada tipo de temporada</h2></div><a className="text-link" href="/catalogo.html">Ver catálogo <ArrowRight size={16} aria-hidden="true" /></a></div>
+        <div className="section-heading"><div><p className="eyebrow">Selección Malakoi</p><h2 id="products-title">Para cada tipo de temporada</h2></div></div>
         <div className="product-grid">
           {products.map((product) => <article className="product-card" key={product.name}>
             <a className="product-image" href="/catalogo.html" aria-label={`Ver ${product.name}`}><img src={product.image} alt={product.alt} loading="lazy" /></a>
@@ -134,7 +109,7 @@ function App() {
         </div>
       </section>
       <section className="section products-section second-products" id="seleccion" aria-labelledby="second-products-title" data-reveal>
-        <div className="section-heading"><div><p className="eyebrow">Encuentra tus favoritos</p><h2 id="second-products-title">Tu próxima pieza favorita</h2></div><a className="text-link" href="/catalogo.html">Explorar todo <ArrowRight size={16} aria-hidden="true" /></a></div>
+        <div className="section-heading"><div><p className="eyebrow">Encuentra tus favoritos</p><h2 id="second-products-title">Tu próxima pieza favorita</h2></div></div>
         <div className="product-grid">
           {lowerProducts.map((product) => <article className="product-card" key={`second-${product.name}`}>
             <a className="product-image" href="/catalogo.html" aria-label={`Ver ${product.name}`}><img src={product.image} alt={product.alt} loading="lazy" /></a>
@@ -147,7 +122,6 @@ function App() {
         <div className="story-image"><img src="/assets/images/bg2.png" alt="Tres looks Malakoi: denim amplio, camiseta blanca y camisa clara con pantalón de pana" loading="lazy" /></div>
         <div className="story-copy"><div className="hero-label"><h2 id="story-title">Una forma propia de vestir.</h2></div><a className="button hero-button" href="/catalogo.html">Descubrir Malakoi <ArrowRight size={17} aria-hidden="true" /></a></div>
       </section>
-      <section className="club-section" aria-labelledby="club-title" data-reveal><p className="eyebrow">Únete a Malakoi</p><h2 id="club-title">Tu estilo, tus reglas</h2><p>Recibe lanzamientos, ideas para combinar y acceso anticipado a nuestras nuevas colecciones.</p><a className="text-link" href="/contacto.html">Conversemos <ArrowRight size={16} aria-hidden="true" /></a></section>
     </main>
     <footer className="footer"><div className="footer-branding"><a className="brand footer-brand" href="/" aria-label="Malakoi, inicio"><img src="/imagen_2026-10-02_215000798-Photoroom.png" alt="Malakoi" /></a><p>Tu estilo, tus reglas.</p></div><nav className="footer-nav" aria-label="Enlaces del pie de página"><a href="/catalogo.html">Catálogo</a><a href="/contacto.html">Contacto</a><a href="/carrito.html">Bolsa</a></nav><SocialLinks className="footer-social" /><small>© {new Date().getFullYear()} Malakoi Studio · Perú</small></footer>
   </>;
