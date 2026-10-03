@@ -19,6 +19,10 @@ const lowerProducts = [
   { ...products[1], name: 'CAMISA LOTUS', category: 'CAMISAS', image: '/assets/images/lotus.png', alt: 'Camisa Lotus negra con cierres orientales' },
   { ...products[2], name: 'CLASP JACKET', category: 'CHAQUETAS', image: '/assets/images/clasp-jacket.png', alt: 'Clasp Jacket negra con cierres metálicos' },
   { ...products[3], name: 'KIMONO V3', category: 'CHAQUETAS', image: '/assets/images/kimono-v3.png', alt: 'Kimono V3 negro de manga amplia' },
+  { ...products[0], name: 'BASIC TANK TOP', category: 'BÁSICOS', image: '/assets/images/basic-tank-top.png', alt: 'Basic Tank Top Malakoi en cuatro colores' },
+  { ...products[1], name: 'POLO 3/4', category: 'POLOS', image: '/assets/images/polo-34.png', alt: 'Polos Malakoi de manga tres cuartos' },
+  { ...products[2], name: 'WIDE RAW DENIM PANTS', category: 'DENIM', image: '/assets/images/wide-raw.png', alt: 'Pantalón Wide Raw Denim negro de pierna amplia' },
+  { ...products[3], name: 'WIDE BAGGY CORDUROY', category: 'PANTALONES', image: '/assets/images/wide-baggy.png', alt: 'Pantalón Wide Baggy de pana color café' },
 ];
 
 function SocialLinks({ className }) {
@@ -140,7 +144,7 @@ function App() {
         </div>
       </section>
       <section className="brand-story" aria-labelledby="story-title" data-reveal>
-        <div className="story-image"><img src="/assets/images/hero-confirmed.png" alt="Imagen editorial de la colección Malakoi" loading="lazy" /></div>
+        <div className="story-image"><img src="/assets/images/bg2.png" alt="Tres looks Malakoi: denim amplio, camiseta blanca y camisa clara con pantalón de pana" loading="lazy" /></div>
         <div className="story-copy"><div className="hero-label"><h2 id="story-title">Una forma propia de vestir.</h2></div><a className="button hero-button" href="/catalogo.html">Descubrir Malakoi <ArrowRight size={17} aria-hidden="true" /></a></div>
       </section>
       <section className="club-section" aria-labelledby="club-title" data-reveal><p className="eyebrow">Únete a Malakoi</p><h2 id="club-title">Tu estilo, tus reglas</h2><p>Recibe lanzamientos, ideas para combinar y acceso anticipado a nuestras nuevas colecciones.</p><a className="text-link" href="/contacto.html">Conversemos <ArrowRight size={16} aria-hidden="true" /></a></section>

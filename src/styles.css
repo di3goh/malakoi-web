@@ -109,3 +109,30 @@ body{background:#fafafa;font-family:Inter,system-ui,sans-serif}
 .hero-button{border-radius:999px}
 .hero-button:hover{border-radius:999px}
 @media(max-width:800px){.brand-story{height:330px;min-height:330px}.story-copy{min-height:330px;padding:26px 18px}}
+
+/* The hero CTA keeps its previous shape; only header controls get rounded hover pills. */
+.hero-button,.hero-button:hover{border-radius:0}
+.header-actions .icon-link,.header-actions .bag-link{border-radius:10px}
+.header-actions .icon-link:hover,.header-actions .bag-link:hover{border-radius:999px}
+
+.brand-story{height:auto;min-height:0;aspect-ratio:16/9;position:relative;background:#000;overflow:hidden}
+.brand-story:after{display:block;content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#0008,transparent 68%),linear-gradient(0deg,#0002,transparent 55%);pointer-events:none}
+.brand-story .story-image{display:block;position:absolute;inset:0;min-height:0;width:100%;height:100%}
+.brand-story .story-image img{width:100%;height:100%;object-fit:cover;object-position:center}
+.brand-story .story-copy{position:absolute;z-index:2;left:7vw;right:auto;bottom:11%;inset-block:auto 11%;min-height:0;padding:0;align-items:flex-start;justify-content:flex-end}
+@media(max-width:800px){.brand-story{aspect-ratio:auto;height:440px}.brand-story .story-image img{object-position:center}.brand-story .story-copy{left:20px;bottom:28px;inset-block:auto 28px;min-height:0;padding:0}}
+
+/* Full-bleed banner, shorter crop, content centered over the image. */
+.brand-story{width:100%;margin:0;border-radius:0;height:clamp(300px,38vw,520px);min-height:0;aspect-ratio:auto}
+.brand-story .story-image img{object-fit:cover;object-position:center 52%}
+.brand-story .story-copy{position:absolute;left:50%;right:auto;top:50%;bottom:auto;inset:auto;transform:translate(-50%,-50%);width:min(92%,660px);min-height:0;align-items:center;justify-content:center;text-align:center;gap:14px;padding:0}
+.brand-story .story-copy .hero-label{max-width:none;width:max-content;padding:12px 18px}
+.brand-story .story-copy .hero-label h2{white-space:nowrap}
+.brand-story .story-copy .hero-button{margin:0}
+.brand-story .story-copy .hero-button{align-self:center;position:static;display:flex;margin-inline:auto}
+@media(max-width:800px){.brand-story{width:100%;height:300px;aspect-ratio:auto}.brand-story .story-copy{left:50%;right:auto;top:50%;bottom:auto;inset:auto;transform:translate(-50%,-50%);width:calc(100% - 28px);min-height:0;padding:0;align-items:center;text-align:center}.brand-story .story-copy .hero-label{max-width:100%;width:max-content;padding:11px 13px}.brand-story .story-copy .hero-label h2{font-size:18px;white-space:nowrap}}
+@media(max-width:390px){.brand-story .story-copy .hero-label h2{font-size:16px}}
+/* Override the earlier inset shorthand so the copy stays centered in the banner. */
+.brand-story .story-copy{left:50%;top:50%;right:auto;bottom:auto;inset:50% auto auto 50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.brand-story .story-copy .hero-button{align-self:center;margin:0 auto;position:relative;left:auto;right:auto}
+@media(max-width:800px){.brand-story .story-copy{left:50%;top:50%;right:auto;bottom:auto;inset:50% auto auto 50%;transform:translate(-50%,-50%);width:calc(100% - 28px)}}
