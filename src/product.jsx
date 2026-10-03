@@ -11,12 +11,13 @@ import './product.css';
 
 const allProducts = [...products, ...lowerProducts];
 const slug = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-const productHref = (name) => name === 'KIMONO JACKET' ? '/kimono-jacket.html' : `/producto.html?item=${encodeURIComponent(slug(name))}`;
+const productHref = (name) => name === 'KIMONO JACKET' ? '/kimono-jacket.html' : `/producto-${encodeURIComponent(slug(name))}.html`;
 
 function ProductPage() {
   useScrollReveal();
   const params = new URLSearchParams(window.location.search);
-  const requested = params.get('item') || '';
+  const routeSlug = window.location.pathname.match(/^\/producto-(.+)\.html$/)?.[1] || '';
+  const requested = params.get('item') || decodeURIComponent(routeSlug);
   const product = useMemo(() => allProducts.find((item) => slug(item.name) === requested) || products[0], [requested]);
   const isMori = product.name === 'MORI DENIM JACKET';
   const isKnot = product.name === 'KNOT ZIP-UP JACKET';
@@ -81,7 +82,7 @@ function ProductPage() {
           <p className="product-detail-category">{product.category}</p>
           <h1 id="product-title">{product.name}</h1>
           <p className="product-detail-subtitle">{product.description || 'Una pieza Malakoi para vestir a tu manera.'}</p>
-          <div className="product-detail-price-row"><p className="product-detail-price">{formatProductPrice(price, currency, product.usdPrice)}</p><label className="product-currency-control">Moneda<select value={currency} onChange={(event) => setStoreCurrency(event.target.value)} aria-label="Elegir moneda"><option value="PEN">PEN · S/</option><option value="USD">USD · $</option></select><span className="currency-note">{product.usdPrice != null ? 'Precio en USD indicado' : 'USD referencial'}</span></label></div>
+          <div className="product-detail-price-row"><p className="product-detail-price">{formatProductPrice(price, currency, product.usdPrice)}</p><label className="product-currency-control"><span>Moneda</span><select value={currency} onChange={(event) => setStoreCurrency(event.target.value)} aria-label="Elegir moneda"><option value="PEN">PEN · S/</option><option value="USD">USD · $</option></select><span className="currency-note">{product.usdPrice != null ? 'Precio en USD indicado' : 'USD referencial'}</span></label></div>
           {isClasp && <p className="product-shipping-note">Envío no incluido</p>}
 
           {product.colors.length > 0 && <fieldset className="product-option product-color-option"><legend>Color{variant ? `: ${variant.name}` : ''}</legend><div className="product-color-list">{product.colors.map((color) => <button type="button" key={color.name} className={`product-color ${variant?.name === color.name ? 'is-selected' : ''}`} onClick={() => setVariant(color)} aria-label={`Seleccionar color ${color.name}`} aria-pressed={variant?.name === color.name} title={color.name} style={{ '--product-swatch': color.value }}><span /></button>)}</div><p className="selected-color">{variant?.name || 'Selecciona un color'}</p></fieldset>}

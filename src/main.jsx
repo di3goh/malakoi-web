@@ -9,7 +9,7 @@ import useScrollReveal from './useScrollReveal.js';
 import { products, lowerProducts } from './data/products.js';
 import './styles.css';
 
-const productHref = (name) => name === 'KIMONO JACKET' ? '/kimono-jacket.html' : `/producto.html?item=${encodeURIComponent(name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}`;
+const productHref = (name) => name === 'KIMONO JACKET' ? '/kimono-jacket.html' : `/producto-${encodeURIComponent(name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}.html`;
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -83,11 +83,11 @@ function App() {
       <section className="hero" ref={hero} aria-labelledby="hero-title">
         <picture className="hero-media">
           {/* Reemplaza /hero-mobile.jpg con tu arte vertical; el banner existente sigue para escritorio. */}
-          <source media="(max-width: 700px)" srcSet="/MALAKOI-BANNER.png" />
-          <img src="/MALAKOI-BANNER.png" alt="Campaña Malakoi: prendas contemporáneas en una composición editorial" fetchPriority="high" />
+          <source media="(max-width: 700px)" srcSet="/MALAKOI-BANNER.jpg" />
+          <img src="/MALAKOI-BANNER.jpg" alt="Campaña Malakoi: prendas contemporáneas en una composición editorial" fetchPriority="high" />
         </picture>
         <div className="hero-mobile-carousel" aria-label="Campañas Malakoi" aria-roledescription="carrusel">
-          {['/assets/images/hero-mobile-1.png', '/assets/images/hero-mobile-2.png', '/assets/images/hero-mobile-3.png'].map((image, index) => <img key={image} className={heroSlide === index ? 'is-active' : ''} src={image} alt={['Look Malakoi con polo blanco y denim amplio', 'Look Malakoi con top negro y bolso estampado', 'Look Malakoi con tank top verde oliva y denim'][index]} loading={index === 0 ? 'eager' : 'lazy'} />)}
+          {['/assets/images/hero-mobile-1.jpg', '/assets/images/hero-mobile-2.jpg', '/assets/images/hero-mobile-3.jpg'].map((image, index) => <img key={image} className={heroSlide === index ? 'is-active' : ''} src={image} alt={['Look Malakoi con polo blanco y denim amplio', 'Look Malakoi con top negro y bolso estampado', 'Look Malakoi con tank top verde oliva y denim'][index]} loading={index === 0 ? 'eager' : 'lazy'} />)}
         </div>
         <div className="hero-shade" />
         <div className="hero-copy">
@@ -123,12 +123,12 @@ function App() {
         <div className="community-heading"><h2 id="community-title">Etiqu&#233;tanos para que compartamos tu look <span>@MALAKOI.PE</span></h2></div>
         <div className="community-track-window"><div className="community-track">
           {[0, 1].map((copy) => <div className="community-track-group" key={copy} aria-hidden={copy === 1}>
-            {['look-1.png','look-2.png','look-3.png','look-4.png','look-5.png','look-6.png','look-7.png','look-8.png'].map((image, index) => <div className="community-card" key={`${copy}-${image}`} aria-hidden="true"><img src={`/assets/images/community/${image}`} alt={`Look Malakoi de la comunidad ${index + 1}`} loading="lazy" /><span>@malakoi.pe</span></div>)}
+            {['look-1.jpg','look-2.jpg','look-3.jpg','look-4.jpg','look-5.jpg','look-6.jpg','look-7.jpg','look-8.jpg'].map((image, index) => <div className="community-card" key={`${copy}-${image}`} aria-hidden="true"><img src={`/assets/images/community/${image}`} alt={`Look Malakoi de la comunidad ${index + 1}`} loading="lazy" /><span>@malakoi.pe</span></div>)}
           </div>)}
         </div></div>
       </section>
       <section className="brand-story" aria-labelledby="story-title" data-reveal>
-        <div className="story-image"><img src="/assets/images/bg2.png" alt="Tres looks Malakoi: denim amplio, camiseta blanca y camisa clara con pantalón de pana" loading="lazy" /></div>
+        <div className="story-image"><img src="/assets/images/bg2.jpg" alt="Tres looks Malakoi: denim amplio, camiseta blanca y camisa clara con pantalón de pana" loading="lazy" /></div>
         <div className="story-copy"><div className="hero-label"><h2 id="story-title">Una forma propia de vestir.</h2></div><a className="button hero-button" href="/catalogo.html">Descubrir Malakoi <ArrowRight size={17} aria-hidden="true" /></a></div>
       </section>
     </main>

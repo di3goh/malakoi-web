@@ -24,6 +24,7 @@
 @media(prefers-reduced-motion:reduce){.site-header .primary-nav,.site-header .menu-toggle svg{transition:none}}
 @media(max-width:800px){.site-header>.header-actions{gap:4px}.site-header>.header-actions .icon-link,.site-header>.header-actions .bag-link{min-width:34px;min-height:34px;padding:6px}}
 @media(max-width:800px){.site-header>.header-actions .theme-toggle{width:34px;height:34px;min-width:34px;min-height:34px;padding:6px}}
+@media(max-width:800px){.site-header>.header-actions .theme-toggle{position:absolute;left:58px;top:50%;transform:translateY(-50%);margin:0}}
 
 html[data-theme="dark"] body{background:#101012;color:#f4f4f4}
 html[data-theme="dark"] .announcement{background:#101012;color:#f4f4f4;border-color:#29292d}
