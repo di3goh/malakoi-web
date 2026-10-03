@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "catalogo.html",
+  "entry": "catalogo.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-03T03:42:26.368Z",
+  "updatedAt": "2026-10-03T03:42:26.368Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

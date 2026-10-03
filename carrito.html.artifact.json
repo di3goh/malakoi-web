@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "carrito.html",
+  "entry": "carrito.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-03T03:42:26.377Z",
+  "updatedAt": "2026-10-03T03:42:26.377Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

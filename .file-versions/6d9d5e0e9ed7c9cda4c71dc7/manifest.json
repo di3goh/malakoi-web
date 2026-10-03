@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "catalogo.html",
+  "currentVersionId": "279c2340-24e6-4658-b9de-73430095830a",
+  "entries": [
+    {
+      "id": "279c2340-24e6-4658-b9de-73430095830a",
+      "fileName": "catalogo.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790998998249,
+      "source": "ai",
+      "prompt": "armame la pagina del catálogo, contacto, y una vista previa del carrito y vista previa de cada prenda del articulo mejor dicho",
+      "size": 7535,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-279c2340-24e6-4658-b9de-73430095830a.html",
+      "contentDigest": "4732d581c7b1f77ad83a7f02652578e1039c3affe41c13365f5d55169e1c128e",
+      "promptSource": "message"
+    }
+  ]
+}

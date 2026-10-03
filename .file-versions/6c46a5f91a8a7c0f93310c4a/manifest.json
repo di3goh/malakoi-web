@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "contacto.html",
+  "currentVersionId": "32fd103c-6185-4ee1-b96f-0533ab393636",
+  "entries": [
+    {
+      "id": "32fd103c-6185-4ee1-b96f-0533ab393636",
+      "fileName": "contacto.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790998998249,
+      "source": "ai",
+      "prompt": "armame la pagina del catálogo, contacto, y una vista previa del carrito y vista previa de cada prenda del articulo mejor dicho",
+      "size": 3636,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-32fd103c-6185-4ee1-b96f-0533ab393636.html",
+      "contentDigest": "38de254be8d2e240b92f17a80af8697ae93cbdc66275a64111cc114dcc276d1c",
+      "promptSource": "message"
+    }
+  ]
+}

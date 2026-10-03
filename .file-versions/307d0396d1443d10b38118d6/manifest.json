@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "carrito.html",
+  "currentVersionId": "c3af4d48-f31f-491d-9dc7-7cd549d95ebd",
+  "entries": [
+    {
+      "id": "c3af4d48-f31f-491d-9dc7-7cd549d95ebd",
+      "fileName": "carrito.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790998998250,
+      "source": "ai",
+      "prompt": "armame la pagina del catálogo, contacto, y una vista previa del carrito y vista previa de cada prenda del articulo mejor dicho",
+      "size": 3998,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-c3af4d48-f31f-491d-9dc7-7cd549d95ebd.html",
+      "contentDigest": "dfb12efd3d9764e22684abd796ecadb824e43a84d315424aa40f8ef8af7a0570",
+      "promptSource": "message"
+    }
+  ]
+}
