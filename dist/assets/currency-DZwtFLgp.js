@@ -1,0 +1,1 @@
+const e=.27,S=()=>localStorage.getItem("malakoiCurrency")==="USD"?"USD":"PEN",r=(o,t="PEN")=>t==="USD"?`$ ${(o*.27).toFixed(2)}`:`S/ ${o}.00`,s=(o,t="PEN",a)=>t==="USD"&&a!=null?`$ ${Number(a).toFixed(2)}`:r(o,t);export{e as U,r as a,s as f,S as r};

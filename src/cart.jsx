@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { Trash2 } from 'lucide-react';
 import StoreHeader from './components/StoreHeader.jsx';
 import StoreFooter from './components/StoreFooter.jsx';
-import { formatPrice, readCurrency } from './data/currency.js';
+import { formatPrice, formatProductPrice, readCurrency, USD_RATE } from './data/currency.js';
 import './styles.css';
 import './cart.css';
 
@@ -17,7 +17,10 @@ function CartPage() {
   const [bag, setBag] = useState(readBag);
   const [currency, setCurrency] = useState(readCurrency);
   const subtotal = useMemo(() => bag.reduce((sum, item) => sum + getUnitPrice(item) * (Number(item.quantity) || 1), 0), [bag]);
-  const orderText = `Hola Malakoi, quiero coordinar este pedido:\n${bag.map((item) => `• ${item.name}${item.color ? `, ${item.color}` : ''}${item.size ? `, talla ${item.size}` : ''} × ${Number(item.quantity) || 1} — ${formatPrice(getUnitPrice(item) * (Number(item.quantity) || 1), currency)}`).join('\n')}\nTotal referencial: ${formatPrice(subtotal, currency)}`;
+  const subtotalUsd = useMemo(() => bag.reduce((sum, item) => sum + (item.usdPrice == null ? getUnitPrice(item) * USD_RATE : Number(item.usdPrice)) * (Number(item.quantity) || 1), 0), [bag]);
+  const formatItemTotal = (item) => formatProductPrice(getUnitPrice(item) * (Number(item.quantity) || 1), currency, item.usdPrice == null ? undefined : Number(item.usdPrice) * (Number(item.quantity) || 1));
+  const formatSubtotal = () => currency === 'USD' ? `$ ${subtotalUsd.toFixed(2)}` : formatPrice(subtotal, currency);
+  const orderText = `Hola Malakoi, quiero coordinar este pedido:\n${bag.map((item) => `• ${item.name}${item.color ? `, ${item.color}` : ''}${item.size ? `, talla ${item.size}` : ''} × ${Number(item.quantity) || 1} — ${formatItemTotal(item)}`).join('\n')}\nTotal referencial: ${formatSubtotal()}`;
   const checkoutHref = `https://wa.me/51906575746?text=${encodeURIComponent(orderText)}`;
   const removeItem = (index) => setBag((current) => {
     const next = current.filter((_, itemIndex) => itemIndex !== index);
@@ -38,15 +41,15 @@ function CartPage() {
         <section className="cart-items" aria-label="Artículos en tu bolsa" aria-live="polite">
           {bag.length ? bag.map((item, index) => <article className="cart-item" key={`${item.name}-${index}`}>
             <img src={item.image} alt={item.name} />
-            <div className="cart-item-copy"><h2>{item.name}</h2><p>{[item.color, item.size && `Talla ${item.size}`, `Cantidad: ${Number(item.quantity) || 1}`].filter(Boolean).join(' · ')}</p><strong>{formatPrice(getUnitPrice(item) * (Number(item.quantity) || 1), currency)}</strong></div>
+            <div className="cart-item-copy"><h2>{item.name}</h2><p>{[item.color, item.size && `Talla ${item.size}`, `Cantidad: ${Number(item.quantity) || 1}`].filter(Boolean).join(' · ')}</p><strong>{formatItemTotal(item)}</strong></div>
             <button className="cart-remove" type="button" onClick={() => removeItem(index)} aria-label={`Quitar ${item.name} de la bolsa`}><Trash2 size={17} /><span>Quitar</span></button>
           </article>) : <div className="cart-empty"><h2>Tu bolsa está esperando una nueva prenda.</h2><a href="/catalogo.html">Explorar catálogo <span aria-hidden="true">→</span></a></div>}
         </section>
         <aside className="cart-summary" aria-label="Resumen del pedido">
           <h2>Resumen del pedido</h2>
-          <div className="cart-summary-row"><span>Subtotal</span><span>{formatPrice(subtotal, currency)}</span></div>
+          <div className="cart-summary-row"><span>Subtotal</span><span>{formatSubtotal()}</span></div>
           <div className="cart-summary-row"><span>Envío</span><span>A coordinar</span></div>
-          <div className="cart-summary-total"><strong>Total referencial</strong><strong>{formatPrice(subtotal, currency)}</strong></div>
+          <div className="cart-summary-total"><strong>Total referencial</strong><strong>{formatSubtotal()}</strong></div>
           {bag.length > 0 && <a className="cart-checkout" href={checkoutHref} target="_blank" rel="noreferrer">Continuar por WhatsApp</a>}
         </aside>
       </div>

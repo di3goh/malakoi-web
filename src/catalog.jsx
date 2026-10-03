@@ -5,7 +5,7 @@ import StoreHeader from './components/StoreHeader.jsx';
 import StoreFooter from './components/StoreFooter.jsx';
 import useScrollReveal from './useScrollReveal.js';
 import { products, lowerProducts } from './data/products.js';
-import { formatPrice, readCurrency } from './data/currency.js';
+import { formatPrice, formatProductPrice, readCurrency } from './data/currency.js';
 import './styles.css';
 import './catalog.css';
 
@@ -42,7 +42,7 @@ function Catalog() {
   const addToBag = () => {
     if (!selected) return;
     const bag = JSON.parse(localStorage.getItem('malakoiBag') || '[]');
-    bag.push({ name: selected.name, price: `S/ ${selected.price || 145}.00`, image: selected.image });
+    bag.push({ name: selected.name, price: `S/ ${selected.price || 145}.00`, usdPrice: selected.usdPrice, image: selected.image });
     localStorage.setItem('malakoiBag', JSON.stringify(bag));
     setSelected(null);
   };
@@ -65,13 +65,13 @@ function Catalog() {
         {visibleProducts.map((product) => <article className="product-card catalog-product-card" data-reveal key={product.name} role="link" tabIndex={0} onClick={(event) => { if (!event.target.closest('button')) window.location.href = productHref(product.name); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); window.location.href = productHref(product.name); } }}>
           <div className="product-image catalog-image-button"><img src={product.image} alt={product.alt} loading="lazy" /></div>
           <button className={`save-button ${saved.includes(product.name) ? 'is-saved' : ''}`} type="button" aria-label={`${saved.includes(product.name) ? 'Quitar de' : 'Añadir a'} favoritos: ${product.name}`} aria-pressed={saved.includes(product.name)} onClick={() => toggleSaved(product.name)}><Heart size={18} fill={saved.includes(product.name) ? 'currentColor' : 'none'} /></button>
-          <div className="product-info"><p className="product-category">{product.category}</p><h2>{product.name}</h2><div className="product-bottom"><div className="swatches" aria-label={`Colores disponibles para ${product.name}`}>{product.colors.map((color) => <span className="swatch" key={color.name} title={color.name} aria-label={color.name} style={{ '--swatch': color.value }} />)}</div><span className="price">{formatPrice(product.price || 145, currency)}</span></div></div>
+          <div className="product-info"><p className="product-category">{product.category}</p><h2>{product.name}</h2><div className="product-bottom"><div className="swatches" aria-label={`Colores disponibles para ${product.name}`}>{product.colors.map((color) => <span className="swatch" key={color.name} title={color.name} aria-label={color.name} style={{ '--swatch': color.value }} />)}</div><span className="price">{formatProductPrice(product.price || 145, currency, product.usdPrice)}</span></div></div>
         </article>)}
         {visibleProducts.length === 0 && <p className="catalog-empty">No encontramos prendas con ese nombre.</p>}
       </section>
     </main>
     <StoreFooter />
-    {selected && <div className="catalog-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelected(null); }}><section className="catalog-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button className="catalog-modal-close" type="button" aria-label="Cerrar detalles" onClick={() => setSelected(null)}><X /></button><img src={selected.image} alt={selected.alt} /><div className="catalog-modal-copy"><p className="eyebrow">{selected.category}</p><h2 id="modal-title">{selected.name}</h2><p>Una prenda Malakoi para acompañarte temporada tras temporada.</p><strong>{formatPrice(selected.price || 145, currency)}</strong><button className="catalog-add-button" type="button" onClick={addToBag}>Añadir a la bolsa <ArrowRight size={16} /></button></div></section></div>}
+    {selected && <div className="catalog-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelected(null); }}><section className="catalog-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button className="catalog-modal-close" type="button" aria-label="Cerrar detalles" onClick={() => setSelected(null)}><X /></button><img src={selected.image} alt={selected.alt} /><div className="catalog-modal-copy"><p className="eyebrow">{selected.category}</p><h2 id="modal-title">{selected.name}</h2><p>Una prenda Malakoi para acompañarte temporada tras temporada.</p><strong>{formatProductPrice(selected.price || 145, currency, selected.usdPrice)}</strong><button className="catalog-add-button" type="button" onClick={addToBag}>Añadir a la bolsa <ArrowRight size={16} /></button></div></section></div>}
   </>;
 }
 

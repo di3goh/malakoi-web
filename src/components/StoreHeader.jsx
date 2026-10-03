@@ -21,6 +21,7 @@ export default function StoreHeader({ active = 'home' }) {
   }, [darkMode]);
   const links = [['CATÁLOGO', '/catalogo.html', 'catalog'], ['PREGUNTAS', '/contacto.html', 'faq']];
   return <>
+    <div className="shipping-marquee" role="region" aria-label="Envíos a todo el Perú, Lima y provincias"><div className="shipping-marquee-track" aria-hidden="true">{Array.from({ length: 8 }, (_, index) => <span key={index}>ENVÍOS A TODO EL PERÚ, LIMA Y PROVINCIAS <b>✦</b></span>)}</div></div>
     <div className="announcement"><p className="announcement-message">TE AMO, PERO ESCOJO MALAKOI <span aria-hidden="true">♥</span></p><SocialLinks className="social-links" /></div>
     <header className="site-header">
       <button className="menu-toggle" type="button" aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={menuOpen} aria-controls="primary-navigation" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>

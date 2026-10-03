@@ -5,7 +5,7 @@ import StoreHeader from './components/StoreHeader.jsx';
 import StoreFooter from './components/StoreFooter.jsx';
 import useScrollReveal from './useScrollReveal.js';
 import { products, lowerProducts } from './data/products.js';
-import { formatPrice, readCurrency } from './data/currency.js';
+import { formatPrice, formatProductPrice, readCurrency } from './data/currency.js';
 import './styles.css';
 import './product.css';
 
@@ -22,14 +22,22 @@ function ProductPage() {
   const isKnot = product.name === 'KNOT ZIP-UP JACKET';
   const isLotus = product.name === 'CAMISA LOTUS';
   const isKimono = product.name === 'KIMONO JACKET';
-  const [variant, setVariant] = useState(() => isKnot || isLotus || isKimono ? product.colors[0] : null);
-  const [size, setSize] = useState(isKnot || isLotus || isKimono ? 'Estándar' : 'S/M');
+  const isClasp = product.name === 'CLASP JACKET';
+  const isJJacket = product.name === 'J-JACKET';
+  const isKimonoV3 = product.name === 'KIMONO V3';
+  const isWideBaggy = product.name === 'WIDE BAGGY CORDUROY';
+  const isParachute = product.name === 'PARACHUTE JOGGER';
+  const isPolo34 = product.name === 'POLO 3/4';
+  const isBasicTank = product.name === 'BASIC TANK TOP';
+  const isWideRaw = product.name === 'WIDE RAW DENIM PANTS';
+  const [variant, setVariant] = useState(() => isKnot || isLotus || isKimono || isClasp || isJJacket || isKimonoV3 || isWideBaggy || isParachute || isPolo34 || isBasicTank || isWideRaw ? product.colors[0] : null);
+  const [size, setSize] = useState(isKnot || isLotus || isKimono || isClasp || isKimonoV3 || isWideBaggy || isParachute || isBasicTank || isWideRaw ? 'Estándar' : isJJacket ? 'M' : isPolo34 ? 'S' : 'S/M');
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [currency, setCurrency] = useState(readCurrency);
   const setStoreCurrency = (value) => { setCurrency(value); localStorage.setItem('malakoiCurrency', value); };
-  const image = variant?.image || product.image;
-  const price = product.price || 145;
+  const image = variant?.image || product.detailImage || product.image;
+  const price = variant?.price || product.price || 145;
   const recommendations = allProducts.filter((item) => item.name !== product.name).slice(0, 5);
   useEffect(() => {
     const title = `${product.name} · Malakoi`;
@@ -51,7 +59,7 @@ function ProductPage() {
 
   const addToBag = () => {
     const bag = JSON.parse(localStorage.getItem('malakoiBag') || '[]');
-    bag.push({ name: product.name, price: `S/ ${price}.00`, image, color: variant?.name || '', size, quantity });
+    bag.push({ name: product.name, price: `S/ ${price}.00`, usdPrice: product.usdPrice, image, color: variant?.name || '', size, quantity });
     localStorage.setItem('malakoiBag', JSON.stringify(bag));
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2200);
@@ -73,7 +81,8 @@ function ProductPage() {
           <p className="product-detail-category">{product.category}</p>
           <h1 id="product-title">{product.name}</h1>
           <p className="product-detail-subtitle">{product.description || 'Una pieza Malakoi para vestir a tu manera.'}</p>
-          <div className="product-detail-price-row"><p className="product-detail-price">{formatPrice(price, currency)}</p><label className="product-currency-control">Moneda<select value={currency} onChange={(event) => setStoreCurrency(event.target.value)} aria-label="Elegir moneda"><option value="PEN">PEN · S/</option><option value="USD">USD · $</option></select><span className="currency-note">USD referencial</span></label></div>
+          <div className="product-detail-price-row"><p className="product-detail-price">{formatProductPrice(price, currency, product.usdPrice)}</p><label className="product-currency-control">Moneda<select value={currency} onChange={(event) => setStoreCurrency(event.target.value)} aria-label="Elegir moneda"><option value="PEN">PEN · S/</option><option value="USD">USD · $</option></select><span className="currency-note">{product.usdPrice != null ? 'Precio en USD indicado' : 'USD referencial'}</span></label></div>
+          {isClasp && <p className="product-shipping-note">Envío no incluido</p>}
 
           {product.colors.length > 0 && <fieldset className="product-option product-color-option"><legend>Color{variant ? `: ${variant.name}` : ''}</legend><div className="product-color-list">{product.colors.map((color) => <button type="button" key={color.name} className={`product-color ${variant?.name === color.name ? 'is-selected' : ''}`} onClick={() => setVariant(color)} aria-label={`Seleccionar color ${color.name}`} aria-pressed={variant?.name === color.name} title={color.name} style={{ '--product-swatch': color.value }}><span /></button>)}</div><p className="selected-color">{variant?.name || 'Selecciona un color'}</p></fieldset>}
 
@@ -86,6 +95,14 @@ function ProductPage() {
           {isMori && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">MATERIAL: DENIM 10 ONZAS 100% ALGODON</p><h3>TALLAS Y MEDIDAS</h3><div className="measurement"><strong>Estándar (equivalente a una S o M)</strong><p>Largo 61 cm · Ancho 62 cm · Hombro 24 cm · Manga 50 cm</p></div><div className="measurement"><strong>Talla L</strong><p>Largo 65 cm · Ancho 64 cm · Hombro 25,5 cm · Manga 53 cm</p></div></section>}
           {isKimono && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">MATERIAL: RAW DENIM · PRENDA UNISEX</p><h3>TALLAS Y MEDIDAS</h3><div className="measurement"><strong>Estándar</strong><p>Largo 60 cm · Ancho 63 cm</p></div><div className="measurement"><strong>Talla L</strong><p>Largo 65 cm · Ancho 64 cm</p></div></section>}
           {isLotus && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">MATERIAL: DENIM 5 ONZAS</p><p className="material-label">Botones chinos hechos de cordón elástico · Corte boxy · Botones de camisa convencionales.</p><h3>TALLA ÚNICA ESTÁNDAR</h3><div className="measurement"><strong>Estándar</strong><p>Largo 61 cm · Ancho 60 cm</p></div></section>}
+          {isJJacket && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">CASACA DE RAW DENIM RÍGIDO · FIT BOXY OVERSIZE · INSPIRADA EN EL ESTILO JAPANDI</p><h3>TALLAS Y MEDIDAS</h3><div className="measurement"><strong>Talla S</strong><p>Largo 57 cm · Ancho 60 cm · Hombro 18 cm · Manga 55 cm</p></div><div className="measurement"><strong>Talla M</strong><p>Largo 59 cm · Ancho 62 cm · Hombro 18 cm · Manga 58 cm</p></div><div className="measurement"><strong>Talla L</strong><p>Largo 63 cm · Ancho 65 cm · Hombro 19 cm · Manga 60 cm</p></div></section>}
+          {isKimonoV3 && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">MATERIAL: DENIM 10 ONZAS</p><h3>TALLAS Y MEDIDAS</h3><div className="measurement"><strong>Estándar</strong><p>Largo 65 cm · Ancho 54 cm · Hombro 29 cm · Manga 46 cm</p></div><div className="measurement"><strong>Talla L</strong><p>Largo 68 cm · Ancho 56 cm · Hombro 30 cm · Manga 48 cm</p></div></section>}
+          {isWideBaggy && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">MATERIAL: CORDUROY DE VENA ANCHA · CINTURA CON ELÁSTICO EN LA PARTE TRASERA</p><h3>TALLAS Y MEDIDAS</h3><div className="measurement"><strong>Estándar</strong><p>Cintura 72–94 cm · Cadera 114 cm · Largo 103 cm · Ancho de pierna 72 cm (toda la vuelta) · Botapie 44 cm (toda la vuelta)</p></div><div className="measurement"><strong>Talla L</strong><p>Cintura 75–96 cm · Cadera 115 cm · Largo 104 cm · Ancho de pierna 74 cm (toda la vuelta) · Botapie 45 cm (toda la vuelta)</p></div></section>}
+          {isParachute && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">FIT SUPER WIDE</p><h3>TALLAS Y MEDIDAS</h3><div className="measurement"><strong>Estándar</strong><p>Cintura 65–92 cm · Largo 107 cm</p></div><div className="measurement"><strong>Talla L</strong><p>Cintura 67–95 cm · Largo 107 cm</p></div><div className="measurement"><strong>Medidas de pierna (ambas tallas)</strong><p>Ancho 37 cm · Contorno 74 cm · Basta 18 cm</p></div></section>}
+          {isPolo34 && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">MATERIAL: 20/1 · ESTAMPADO EN 3D · FIT CORTE BOXY</p><h3>TALLAS Y MEDIDAS</h3><div className="measurement"><strong>Talla S</strong><p>Largo 57 cm · Ancho 62 cm</p></div><div className="measurement"><strong>Talla M</strong><p>Largo 59 cm · Ancho 63 cm</p></div><div className="measurement"><strong>Talla L</strong><p>Largo 61 cm · Ancho 64 cm</p></div></section>}
+          {isBasicTank && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">MATERIAL: RIB GRUESO 100% ALGODÓN</p><h3>TALLA ESTÁNDAR (EQUIVALE A S/M)</h3><div className="measurement"><strong>Estándar</strong><p>Largo 60 cm · Ancho de 37 a 59 cm, se amolda al cuerpo</p></div></section>}
+          {isWideRaw && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">MATERIAL: DENIM 7 ONZAS · CINTURA ELÁSTICA</p><h3>TALLAS Y MEDIDAS</h3><div className="measurement"><strong>Estándar</strong><p>Cintura 60–95 cm · Cadera 110 cm · Largo 103 cm · Botapie 88 cm</p></div><div className="measurement"><strong>Talla L</strong><p>Cintura 62–99 cm · Cadera 112 cm · Largo 105 cm · Botapie 90 cm</p></div></section>}
+          {isClasp && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">MATERIAL: DENIM 12 ONZAS · PRENDA UNISEX</p><h3>TALLAS Y MEDIDAS</h3><div className="measurement"><strong>Estándar</strong><p>Largo 62 cm · Ancho 64 cm · Hombro 17 cm · Manga 54 cm</p></div><div className="measurement"><strong>Talla L</strong><p>Largo 66 cm · Ancho 65 cm · Hombro 18 cm · Manga 56 cm</p></div></section>}
           {isKnot && <section className="product-specifications" aria-labelledby="spec-title"><h2 id="spec-title">Detalles y medidas</h2><p className="material-label">MATERIAL: FRANELA 20/1. CONTIENE REACTIVO, ANTIPEELING Y NO SE DEFORMA.</p><p className="material-label">Nudos de cordones de algodón.</p><h3>TALLAS Y MEDIDAS</h3><div className="measurement"><strong>Estándar</strong><p>Largo 57 cm · Ancho axila a axila 60 cm · Manga 55 cm (sin contar el hombro) · Hombro 18 cm · Cintura 60 cm regulable</p></div><div className="measurement"><strong>Talla L</strong><p>Largo 62 cm · Ancho axila a axila 63 cm · Manga 58 cm · Hombro 19 cm · Cintura 62 cm</p></div></section>}
         </section>
       </div>
@@ -93,7 +110,7 @@ function ProductPage() {
         <div className="related-heading"><p className="eyebrow">Completa tu look</p><h2 id="related-title">También te podría gustar</h2></div>
         <div className="related-grid">{recommendations.map((item) => <a className="related-card" data-reveal href={productHref(item.name)} key={item.name}>
           <span className="related-image"><img src={item.image} alt={item.alt} loading="lazy" /></span>
-          <span className="related-category">{item.category}</span><strong>{item.name}</strong><span className="related-price">{formatPrice(item.price || 145, currency)}</span>
+          <span className="related-category">{item.category}</span><strong>{item.name}</strong><span className="related-price">{formatProductPrice(item.price || 145, currency, item.usdPrice)}</span>
         </a>)}</div>
       </section>
     </main>
