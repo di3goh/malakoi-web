@@ -3,16 +3,18 @@ import { createRoot } from 'react-dom/client';
 import { ArrowDown, ArrowRight, Heart } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import StoreHeader, { SocialLinks } from './components/StoreHeader.jsx';
+import StoreHeader from './components/StoreHeader.jsx';
+import StoreFooter from './components/StoreFooter.jsx';
+import useScrollReveal from './useScrollReveal.js';
 import { products, lowerProducts } from './data/products.js';
 import './styles.css';
 
 const productHref = (name) => `/producto.html?item=${encodeURIComponent(name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}`;
 
-gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
+gsap.registerPlugin(ScrollToPlugin);
 
 function App() {
+  useScrollReveal();
   const [saved, setSaved] = useState([]);
   const [heroSlide, setHeroSlide] = useState(0);
   const hero = useRef(null);
@@ -33,9 +35,6 @@ function App() {
     let wheelIdleTimer;
     const context = gsap.context(() => {
       gsap.from('.hero-copy > *', { y: 28, opacity: 0, duration: 0.8, stagger: 0.12, ease: 'power2.out', delay: 0.15 });
-      gsap.utils.toArray('[data-reveal]').forEach((element) => {
-        gsap.from(element, { y: 28, opacity: 0, duration: 0.7, ease: 'power2.out', scrollTrigger: { trigger: element, start: 'top 88%', once: true } });
-      });
     }, hero);
     // Smooth both wheel input and in-page links with GSAP ScrollToPlugin.
     const handleWheel = (event) => {
@@ -103,8 +102,8 @@ function App() {
       <section className="section products-section" id="novedades" aria-labelledby="products-title" data-reveal>
         <div className="section-heading"><div><p className="eyebrow">Selección Malakoi</p><h2 id="products-title">Para cada tipo de temporada</h2></div></div>
         <div className="product-grid">
-          {products.map((product) => <article className="product-card" key={product.name}>
-            <a className="product-image" href={productHref(product.name)} aria-label={`Ver ${product.name}`}><img src={product.image} alt={product.alt} loading="lazy" /></a>
+          {products.map((product) => <article className="product-card" data-reveal key={product.name} role="link" tabIndex={0} onClick={(event) => { if (!event.target.closest('button')) window.location.href = productHref(product.name); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); window.location.href = productHref(product.name); } }}>
+            <div className="product-image"><img src={product.image} alt={product.alt} loading="lazy" /></div>
             <button className={`save-button ${saved.includes(product.name) ? 'is-saved' : ''}`} type="button" aria-label={`${saved.includes(product.name) ? 'Quitar de' : 'Añadir a'} favoritos: ${product.name}`} aria-pressed={saved.includes(product.name)} onClick={() => toggleSaved(product.name)}><Heart size={18} fill={saved.includes(product.name) ? 'currentColor' : 'none'} /></button>
             <div className="product-info"><p className="product-category">{product.category}</p><h3>{product.name}</h3><div className="product-bottom"><div className="swatches" aria-label={`Colores disponibles para ${product.name}`}>{product.colors.map((color) => <span className="swatch" key={color.name} title={color.name} aria-label={color.name} style={{ '--swatch': color.value }} />)}</div><span className="price">S/ {product.price || 145}.00</span></div></div>
           </article>)}
@@ -113,19 +112,27 @@ function App() {
       <section className="section products-section second-products" id="seleccion" aria-labelledby="second-products-title" data-reveal>
         <div className="section-heading"><div><p className="eyebrow">Encuentra tus favoritos</p><h2 id="second-products-title">Tu próxima pieza favorita</h2></div></div>
         <div className="product-grid">
-          {lowerProducts.map((product) => <article className="product-card" key={`second-${product.name}`}>
-            <a className="product-image" href={productHref(product.name)} aria-label={`Ver ${product.name}`}><img src={product.image} alt={product.alt} loading="lazy" /></a>
+          {lowerProducts.map((product) => <article className="product-card" data-reveal key={`second-${product.name}`} role="link" tabIndex={0} onClick={(event) => { if (!event.target.closest('button')) window.location.href = productHref(product.name); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); window.location.href = productHref(product.name); } }}>
+            <div className="product-image"><img src={product.image} alt={product.alt} loading="lazy" /></div>
             <button className={`save-button ${saved.includes(product.name) ? 'is-saved' : ''}`} type="button" aria-label={`${saved.includes(product.name) ? 'Quitar de' : 'Añadir a'} favoritos: ${product.name}`} aria-pressed={saved.includes(product.name)} onClick={() => toggleSaved(product.name)}><Heart size={18} fill={saved.includes(product.name) ? 'currentColor' : 'none'} /></button>
             <div className="product-info"><p className="product-category">{product.category}</p><h3>{product.name}</h3><div className="product-bottom"><div className="swatches" aria-label={`Colores disponibles para ${product.name}`}>{product.colors.map((color) => <span className="swatch" key={color.name} title={color.name} aria-label={color.name} style={{ '--swatch': color.value }} />)}</div><span className="price">S/ {product.price || 145}.00</span></div></div>
           </article>)}
         </div>
+      </section>
+      <section className="community-section" aria-labelledby="community-title">
+        <div className="community-heading"><h2 id="community-title">Etiqu&#233;tanos para que compartamos tu look <span>@MALAKOI.PE</span></h2></div>
+        <div className="community-track-window"><div className="community-track">
+          {[0, 1].map((copy) => <div className="community-track-group" key={copy} aria-hidden={copy === 1}>
+            {['look-1.png','look-2.png','look-3.png','look-4.png','look-5.png','look-6.png','look-7.png','look-8.png'].map((image, index) => <div className="community-card" key={`${copy}-${image}`} aria-hidden="true"><img src={`/assets/images/community/${image}`} alt={`Look Malakoi de la comunidad ${index + 1}`} loading="lazy" /><span>@malakoi.pe</span></div>)}
+          </div>)}
+        </div></div>
       </section>
       <section className="brand-story" aria-labelledby="story-title" data-reveal>
         <div className="story-image"><img src="/assets/images/bg2.png" alt="Tres looks Malakoi: denim amplio, camiseta blanca y camisa clara con pantalón de pana" loading="lazy" /></div>
         <div className="story-copy"><div className="hero-label"><h2 id="story-title">Una forma propia de vestir.</h2></div><a className="button hero-button" href="/catalogo.html">Descubrir Malakoi <ArrowRight size={17} aria-hidden="true" /></a></div>
       </section>
     </main>
-    <footer className="footer"><div className="footer-branding"><a className="brand footer-brand" href="/" aria-label="Malakoi, inicio"><img src="/imagen_2026-10-02_215000798-Photoroom.png" alt="Malakoi" /></a><p>Tu estilo, tus reglas.</p></div><nav className="footer-nav" aria-label="Enlaces del pie de página"><a href="/catalogo.html">Catálogo</a><a href="/contacto.html">Contacto</a><a href="/carrito.html">Bolsa</a></nav><SocialLinks className="footer-social" /><small>© {new Date().getFullYear()} Malakoi Studio · Perú</small></footer>
+    <StoreFooter />
   </>;
 }
 

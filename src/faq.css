@@ -1,0 +1,22 @@
+.faq-page{min-height:calc(100vh - 114px);padding:70px 24px 100px;background:#f5f5f5;color:#171715}
+.faq-content{width:min(660px,100%);margin:0 auto}
+.faq-content>.eyebrow{margin:0 0 10px;color:#77766f;font-size:11px;letter-spacing:.14em}
+.faq-content h1{margin:0;font:800 clamp(34px,5vw,48px)/1.08 Inter,system-ui,sans-serif;letter-spacing:-.055em}
+.faq-intro{margin:13px 0 26px;color:#6c6b65;font-size:14px;line-height:1.65}
+.faq-list{border-top:1px solid #d7d6d0}
+.faq-item{border-bottom:1px solid #d7d6d0}
+.faq-item summary{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:18px;list-style:none;cursor:pointer;font-size:16px;font-weight:750;letter-spacing:-.02em}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary svg{flex:none;color:#77766f;transition:transform .3s cubic-bezier(.2,.8,.25,1)}
+.faq-item[open] summary svg{transform:rotate(180deg)}
+.faq-item>p{max-width:590px;margin:-2px 36px 21px 0;color:#686760;font-size:14px;line-height:1.75;animation:faq-answer-in .28s ease both}
+.faq-item>p a{font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.faq-contact-link{display:inline-flex;margin-top:22px;color:inherit;font-size:13px;font-weight:750;text-decoration:underline;text-underline-offset:4px;transition:opacity .25s ease}
+.faq-contact-link:hover{opacity:.68}
+@keyframes faq-answer-in{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+html[data-theme="dark"] .faq-page{background:#101012;color:#f2f2f2}
+html[data-theme="dark"] .faq-content>.eyebrow,html[data-theme="dark"] .faq-intro,html[data-theme="dark"] .faq-item>p{color:#b8b8bd}
+html[data-theme="dark"] .faq-list,html[data-theme="dark"] .faq-item{border-color:#35353a}
+html[data-theme="dark"] .faq-item summary svg{color:#c1c1c7}
+@media(max-width:650px){.faq-page{min-height:calc(100vh - 102px);padding:48px 20px 68px}.faq-item summary{min-height:66px;font-size:15px}.faq-item>p{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.faq-item summary svg{transition:none}.faq-item>p{animation:none}}

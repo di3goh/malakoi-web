@@ -7,7 +7,7 @@
 
 export const lowerProducts = [
   { ...products[0], name: 'PARACHUTE JOGGER', category: 'PANTALONES', image: '/assets/images/parachute.png', alt: 'Parachute jogger gris de pierna amplia' },
-  { ...products[1], name: 'CAMISA LOTUS', category: 'CAMISAS', image: '/assets/images/lotus.png', alt: 'Camisa Lotus negra con cierres orientales' },
+  { ...products[1], name: 'CAMISA LOTUS', category: 'CAMISAS', image: '/assets/images/lotus.png', alt: 'Camisa Lotus negra con botones chinos', price: 125, description: 'Denim de 5 onzas con botones chinos hechos de cordón elástico. Camisa de corte boxy.', sizes: ['Estándar'], measurements: 'Largo 61 cm · Ancho 60 cm', colors: [{ name: 'Negro', value: '#252528', image: '/assets/images/lotus.png' }, { name: 'Azul', value: '#334967', image: '/assets/images/lotus-azul.png' }] },
   { ...products[2], name: 'CLASP JACKET', category: 'CHAQUETAS', image: '/assets/images/clasp-jacket.png', alt: 'Clasp Jacket negra con cierres metÃ¡licos' },
   { ...products[3], name: 'KIMONO V3', category: 'CHAQUETAS', image: '/assets/images/kimono-v3.png', alt: 'Kimono V3 negro de manga amplia' },
   { ...products[0], name: 'BASIC TANK TOP', category: 'BÃSICOS', image: '/assets/images/basic-tank-top.png', alt: 'Basic Tank Top Malakoi en cuatro colores' },
