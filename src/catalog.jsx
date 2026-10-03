@@ -7,6 +7,7 @@ import './styles.css';
 import './catalog.css';
 
 const allProducts = [...products, ...lowerProducts];
+const productHref = (name) => `/producto.html?item=${encodeURIComponent(name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}`;
 const filters = [
   ['all', 'Todas las prendas'], ['CHAQUETAS', 'Chaquetas'], ['DENIM', 'Denim'],
   ['PANTALONES', 'Pantalones'], ['CAMISAS', 'Camisas'], ['BÁSICOS', 'Tops'], ['POLOS', 'Polos'],
@@ -35,7 +36,7 @@ function Catalog() {
   const addToBag = () => {
     if (!selected) return;
     const bag = JSON.parse(localStorage.getItem('malakoiBag') || '[]');
-    bag.push({ name: selected.name, price: 'S/ 145.00', image: selected.image });
+    bag.push({ name: selected.name, price: `S/ ${selected.price || 145}.00`, image: selected.image });
     localStorage.setItem('malakoiBag', JSON.stringify(bag));
     setSelected(null);
   };
@@ -46,19 +47,19 @@ function Catalog() {
     <main className="catalog-main">
       <div className="catalog-breadcrumb"><a href="/">Inicio</a><ChevronRight size={14} aria-hidden="true" /><span>Catálogo</span></div>
       <section className="catalog-intro" aria-labelledby="catalog-title">
-        <div><p className="eyebrow">Malakoi · Tienda</p><h1 id="catalog-title">Catálogo</h1><p className="catalog-subtitle">Prendas para moverte y vestir a tu manera.</p></div>
+        <div><h1 id="catalog-title">Catálogo</h1><p className="catalog-subtitle">Prendas para moverte y vestir a tu manera.</p></div>
         <label className="sort-control"><span>Ordenar por</span><span className="select-wrap"><select value={sort} onChange={(event) => setSort(event.target.value)} aria-label="Ordenar productos"><option value="featured">Recomendados</option><option value="newest">Más recientes</option><option value="az">Nombre A–Z</option></select><ChevronDown size={15} aria-hidden="true" /></span></label>
       </section>
       <section className="catalog-tools" aria-label="Filtrar catálogo">
         <div className="filter-row">{filters.map(([value, label]) => <button key={value} type="button" className={`catalog-filter ${category === value ? 'active' : ''}`} aria-pressed={category === value} onClick={() => setCategory(value)}>{label}</button>)}</div>
-        <label className="catalog-search"><span className="sr-only">Buscar productos</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar prendas" /></label>
+        <label className="catalog-search"><input aria-label="Buscar por nombre de prenda" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar…" /></label>
       </section>
       <div className="catalog-results"><p>{visibleProducts.length} prendas</p><span>Precios en soles (S/)</span></div>
       <section className="product-grid catalog-product-grid" aria-label="Productos del catálogo">
         {visibleProducts.map((product) => <article className="product-card catalog-product-card" key={product.name}>
-          <button type="button" className="product-image catalog-image-button" aria-label={`Ver detalles de ${product.name}`} onClick={() => setSelected(product)}><img src={product.image} alt={product.alt} loading="lazy" /></button>
+          <a className="product-image catalog-image-button" aria-label={`Ver detalles de ${product.name}`} href={productHref(product.name)}><img src={product.image} alt={product.alt} loading="lazy" /></a>
           <button className={`save-button ${saved.includes(product.name) ? 'is-saved' : ''}`} type="button" aria-label={`${saved.includes(product.name) ? 'Quitar de' : 'Añadir a'} favoritos: ${product.name}`} aria-pressed={saved.includes(product.name)} onClick={() => toggleSaved(product.name)}><Heart size={18} fill={saved.includes(product.name) ? 'currentColor' : 'none'} /></button>
-          <div className="product-info"><p className="product-category">{product.category}</p><h2>{product.name}</h2><div className="product-bottom"><div className="swatches" aria-label={`Colores disponibles para ${product.name}`}>{product.colors.map((color) => <span className="swatch" key={color.name} title={color.name} aria-label={color.name} style={{ '--swatch': color.value }} />)}</div><span className="price">S/ 145.00</span></div></div>
+          <div className="product-info"><p className="product-category">{product.category}</p><h2>{product.name}</h2><div className="product-bottom"><div className="swatches" aria-label={`Colores disponibles para ${product.name}`}>{product.colors.map((color) => <span className="swatch" key={color.name} title={color.name} aria-label={color.name} style={{ '--swatch': color.value }} />)}</div><span className="price">S/ {product.price || 145}.00</span></div></div>
         </article>)}
         {visibleProducts.length === 0 && <p className="catalog-empty">No encontramos prendas con ese nombre.</p>}
       </section>

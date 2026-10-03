@@ -1,0 +1,1 @@
+import{a,R as e,S as r}from"./StoreHeader-DU9toH2E.js";const t=document.getElementById("shared-header");t&&a.createRoot(t).render(e.createElement(e.StrictMode,null,e.createElement(r,{active:t.dataset.active})));

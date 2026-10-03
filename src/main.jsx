@@ -8,6 +8,8 @@ import StoreHeader, { SocialLinks } from './components/StoreHeader.jsx';
 import { products, lowerProducts } from './data/products.js';
 import './styles.css';
 
+const productHref = (name) => `/producto.html?item=${encodeURIComponent(name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}`;
+
 gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
 function App() {
@@ -102,9 +104,9 @@ function App() {
         <div className="section-heading"><div><p className="eyebrow">Selección Malakoi</p><h2 id="products-title">Para cada tipo de temporada</h2></div></div>
         <div className="product-grid">
           {products.map((product) => <article className="product-card" key={product.name}>
-            <a className="product-image" href="/catalogo.html" aria-label={`Ver ${product.name}`}><img src={product.image} alt={product.alt} loading="lazy" /></a>
+            <a className="product-image" href={productHref(product.name)} aria-label={`Ver ${product.name}`}><img src={product.image} alt={product.alt} loading="lazy" /></a>
             <button className={`save-button ${saved.includes(product.name) ? 'is-saved' : ''}`} type="button" aria-label={`${saved.includes(product.name) ? 'Quitar de' : 'Añadir a'} favoritos: ${product.name}`} aria-pressed={saved.includes(product.name)} onClick={() => toggleSaved(product.name)}><Heart size={18} fill={saved.includes(product.name) ? 'currentColor' : 'none'} /></button>
-            <div className="product-info"><p className="product-category">{product.category}</p><h3>{product.name}</h3><div className="product-bottom"><div className="swatches" aria-label={`Colores disponibles para ${product.name}`}>{product.colors.map((color) => <span className="swatch" key={color.name} title={color.name} aria-label={color.name} style={{ '--swatch': color.value }} />)}</div><span className="price">S/ 145.00</span></div></div>
+            <div className="product-info"><p className="product-category">{product.category}</p><h3>{product.name}</h3><div className="product-bottom"><div className="swatches" aria-label={`Colores disponibles para ${product.name}`}>{product.colors.map((color) => <span className="swatch" key={color.name} title={color.name} aria-label={color.name} style={{ '--swatch': color.value }} />)}</div><span className="price">S/ {product.price || 145}.00</span></div></div>
           </article>)}
         </div>
       </section>
@@ -112,9 +114,9 @@ function App() {
         <div className="section-heading"><div><p className="eyebrow">Encuentra tus favoritos</p><h2 id="second-products-title">Tu próxima pieza favorita</h2></div></div>
         <div className="product-grid">
           {lowerProducts.map((product) => <article className="product-card" key={`second-${product.name}`}>
-            <a className="product-image" href="/catalogo.html" aria-label={`Ver ${product.name}`}><img src={product.image} alt={product.alt} loading="lazy" /></a>
+            <a className="product-image" href={productHref(product.name)} aria-label={`Ver ${product.name}`}><img src={product.image} alt={product.alt} loading="lazy" /></a>
             <button className={`save-button ${saved.includes(product.name) ? 'is-saved' : ''}`} type="button" aria-label={`${saved.includes(product.name) ? 'Quitar de' : 'Añadir a'} favoritos: ${product.name}`} aria-pressed={saved.includes(product.name)} onClick={() => toggleSaved(product.name)}><Heart size={18} fill={saved.includes(product.name) ? 'currentColor' : 'none'} /></button>
-            <div className="product-info"><p className="product-category">{product.category}</p><h3>{product.name}</h3><div className="product-bottom"><div className="swatches" aria-label={`Colores disponibles para ${product.name}`}>{product.colors.map((color) => <span className="swatch" key={color.name} title={color.name} aria-label={color.name} style={{ '--swatch': color.value }} />)}</div><span className="price">S/ 145.00</span></div></div>
+            <div className="product-info"><p className="product-category">{product.category}</p><h3>{product.name}</h3><div className="product-bottom"><div className="swatches" aria-label={`Colores disponibles para ${product.name}`}>{product.colors.map((color) => <span className="swatch" key={color.name} title={color.name} aria-label={color.name} style={{ '--swatch': color.value }} />)}</div><span className="price">S/ {product.price || 145}.00</span></div></div>
           </article>)}
         </div>
       </section>
