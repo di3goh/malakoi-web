@@ -430,6 +430,7 @@ html[data-theme="dark"] .site-header.shop-header{background:rgba(16,16,18,.94);b
  .shop-header .header-actions .theme-toggle{width:34px;height:34px;min-width:34px;min-height:34px;padding:6px}
 }
 @media(max-width:800px){
+ html body .site-header .primary-nav{left:50%;right:auto;width:100vw;margin-left:-50vw}
  html[data-theme="light"] body .site-header.home-header .primary-nav{background:#f0f0f0;color:#171715;border-color:#d6d6d6;box-shadow:0 12px 22px #0002}
  html[data-theme="light"] body .site-header.home-header .primary-nav a{color:#171715}
  html[data-theme="dark"] body .site-header.home-header .primary-nav{background:transparent;color:#f2f2f2;border-color:transparent;box-shadow:none}
