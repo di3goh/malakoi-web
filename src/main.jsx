@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
@@ -24,6 +24,12 @@ const featuredProducts = [
 const nextProducts = ['PARACHUTE JOGGER', 'POLO 3/4', 'WIDE RAW DENIM PANTS', 'WIDE BAGGY CORDUROY']
   .map((name) => lowerProducts.find((product) => product.name === name));
 const homePrices = { 'MORI DENIM JACKET': 180, 'POLO 3/4': 65 };
+const mobileHeroSlides = [
+  { src: '/assets/images/home-mobile-01.png', alt: 'Modelo Malakoi con polerón negro frente a un edificio' },
+  { src: '/assets/images/home-mobile-02.png', alt: 'Look Malakoi con polo marrón y denim amplio' },
+  { src: '/assets/images/home-mobile-03.png', alt: 'Modelo Malakoi con top negro y bolso estampado' },
+];
+
 const homeImages = {
   'CLASP JACKET': '/assets/images/home-clasp.jpg',
   'KNOT ZIP-UP JACKET': '/assets/images/home-knot.jpg',
@@ -38,6 +44,55 @@ const homeImages = {
   'WIDE RAW DENIM PANTS': '/assets/images/home-wide-raw.jpg',
   'WIDE BAGGY CORDUROY': '/assets/images/home-wide-baggy.jpg',
 };
+
+function MobileHeroCarousel() {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 800px)').matches);
+
+  useEffect(() => {
+    const mobileQuery = window.matchMedia('(max-width: 800px)');
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let intervalId;
+    const syncAutoplay = () => {
+      setIsMobile(mobileQuery.matches);
+      window.clearInterval(intervalId);
+      if (mobileQuery.matches && !reducedMotionQuery.matches) {
+        intervalId = window.setInterval(() => setActiveSlide((current) => (current + 1) % mobileHeroSlides.length), 4800);
+      }
+    };
+    syncAutoplay();
+    mobileQuery.addEventListener('change', syncAutoplay);
+    reducedMotionQuery.addEventListener('change', syncAutoplay);
+    return () => {
+      window.clearInterval(intervalId);
+      mobileQuery.removeEventListener('change', syncAutoplay);
+      reducedMotionQuery.removeEventListener('change', syncAutoplay);
+    };
+  }, []);
+
+  if (!isMobile) return null;
+
+  return <div className="home-hero-mobile-carousel" role="region" aria-roledescription="carrusel" aria-label="Campaña Malakoi para móvil">
+    {mobileHeroSlides.map((slide, index) => <img
+      key={slide.src}
+      className={`home-hero-mobile-slide${activeSlide === index ? ' is-active' : ''}`}
+      src={slide.src}
+      alt={slide.alt}
+      aria-hidden={activeSlide !== index}
+      fetchPriority={index === 0 ? 'high' : 'auto'}
+    />)}
+    <div className="home-hero-pagination" role="group" aria-label="Elegir imagen del carrusel">
+      {mobileHeroSlides.map((slide, index) => <button
+        key={slide.src}
+        type="button"
+        aria-label={`Mostrar imagen ${index + 1}`}
+        aria-pressed={activeSlide === index}
+        className={activeSlide === index ? 'is-active' : ''}
+        onClick={() => setActiveSlide(index)}
+      />)}
+    </div>
+  </div>;
+}
 
 function ProductCard({ product }) {
   return <a className="home-product-card" href={productHref(product.name)} data-reveal>
@@ -108,7 +163,8 @@ function App() {
     <main id="contenido" className="home-page">
       <h1 className="home-page-title">Malakoi · prendas con carácter para todos los días</h1>
       <section className="home-hero" aria-label="Campaña Malakoi">
-        <img src="/assets/images/figma-home-hero.jpg" alt="Campaña Malakoi con dos modelos y el emblema de la marca" fetchPriority="high" />
+        <img className="home-hero-desktop" src="/assets/images/figma-home-hero.jpg" alt="Campaña Malakoi con dos modelos y el emblema de la marca" fetchPriority="high" />
+        <MobileHeroCarousel />
       </section>
       <section className="home-products-section" id="novedades" aria-labelledby="products-title">
         <h2 id="products-title">PARA CUALQUIER TIPO DE TEMPORADA</h2>
