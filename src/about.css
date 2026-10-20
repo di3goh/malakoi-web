@@ -6,4 +6,4 @@
 html[data-theme="dark"] .about-coming-soon{background:#101012;color:#f2f2f2}
 html[data-theme="dark"] .about-coming-soon-content img{filter:brightness(0) invert(1)}
 html[data-theme="dark"] .about-coming-soon-content p{color:#b8b8bd}
-@media(max-width:800px){.about-coming-soon{min-height:calc(100svh - 154px);margin-top:154px}}
+@media(max-width:800px){.about-coming-soon{min-height:calc(100svh - 132px);margin-top:0}}
