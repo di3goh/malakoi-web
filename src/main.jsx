@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { gsap } from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import StoreHeader from './components/StoreHeader.jsx';
 import StoreFooter from './components/StoreFooter.jsx';
+import CampaignHero from './components/CampaignHero.jsx';
 import useScrollReveal from './useScrollReveal.js';
 import { products, lowerProducts } from './data/products.js';
 import './styles.css';
@@ -24,12 +23,6 @@ const featuredProducts = [
 const nextProducts = ['PARACHUTE JOGGER', 'POLO 3/4', 'WIDE RAW DENIM PANTS', 'WIDE BAGGY CORDUROY']
   .map((name) => lowerProducts.find((product) => product.name === name));
 const homePrices = { 'MORI DENIM JACKET': 180, 'POLO 3/4': 65 };
-const mobileHeroSlides = [
-  { src: '/assets/images/home-mobile-01.png', alt: 'Modelo Malakoi con polerón negro frente a un edificio' },
-  { src: '/assets/images/home-mobile-02.png', alt: 'Look Malakoi con polo marrón y denim amplio' },
-  { src: '/assets/images/home-mobile-03.png', alt: 'Modelo Malakoi con top negro y bolso estampado' },
-];
-
 const homeImages = {
   'CLASP JACKET': '/assets/images/home-clasp.jpg',
   'KNOT ZIP-UP JACKET': '/assets/images/home-knot.jpg',
@@ -45,63 +38,19 @@ const homeImages = {
   'WIDE BAGGY CORDUROY': '/assets/images/home-wide-baggy.jpg',
 };
 
-function MobileHeroCarousel() {
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 800px)').matches);
-
-  useEffect(() => {
-    const mobileQuery = window.matchMedia('(max-width: 800px)');
-    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let intervalId;
-    const syncAutoplay = () => {
-      setIsMobile(mobileQuery.matches);
-      window.clearInterval(intervalId);
-      if (mobileQuery.matches && !reducedMotionQuery.matches) {
-        intervalId = window.setInterval(() => setActiveSlide((current) => (current + 1) % mobileHeroSlides.length), 4800);
-      }
-    };
-    syncAutoplay();
-    mobileQuery.addEventListener('change', syncAutoplay);
-    reducedMotionQuery.addEventListener('change', syncAutoplay);
-    return () => {
-      window.clearInterval(intervalId);
-      mobileQuery.removeEventListener('change', syncAutoplay);
-      reducedMotionQuery.removeEventListener('change', syncAutoplay);
-    };
-  }, []);
-
-  if (!isMobile) return null;
-
-  return <div className="home-hero-mobile-carousel" role="region" aria-roledescription="carrusel" aria-label="Campaña Malakoi para móvil">
-    {mobileHeroSlides.map((slide, index) => <img
-      key={slide.src}
-      className={`home-hero-mobile-slide${activeSlide === index ? ' is-active' : ''}`}
-      src={slide.src}
-      alt={slide.alt}
-      aria-hidden={activeSlide !== index}
-      fetchPriority={index === 0 ? 'high' : 'auto'}
-    />)}
-    <div className="home-hero-pagination" role="group" aria-label="Elegir imagen del carrusel">
-      {mobileHeroSlides.map((slide, index) => <button
-        key={slide.src}
-        type="button"
-        aria-label={`Mostrar imagen ${index + 1}`}
-        aria-pressed={activeSlide === index}
-        className={activeSlide === index ? 'is-active' : ''}
-        onClick={() => setActiveSlide(index)}
-      />)}
-    </div>
-  </div>;
-}
-
 function ProductCard({ product }) {
+  const alternateImage = product.colors.slice(1).find((color) => color.image && color.image !== product.colors[0]?.image)?.image;
   return <a className="home-product-card" href={productHref(product.name)} data-reveal>
-    <span className="home-product-image"><img src={homeImages[product.name] || product.image} alt={product.alt} loading="lazy" /></span>
+    <span className="home-product-image">
+      <img src={homeImages[product.name] || product.image} alt={product.alt} loading="lazy" decoding="async" />
+      {alternateImage && <img className="home-product-image-alternate" src={alternateImage} alt="" aria-hidden="true" loading="lazy" decoding="async" />}
+    </span>
     <span className="home-product-info">
+      <span className="home-product-category">{product.category}</span>
       <span className="home-product-name">{product.name}</span>
       <span className="home-product-details">
-        <span className="home-product-swatches" aria-label={`Colores disponibles: ${product.colors.map((color) => color.name).join(', ')}`}>
-          {product.colors.map((color) => <span className="home-product-swatch" key={color.name} title={color.name} style={{ '--swatch': color.value }} />)}
+        <span className="home-product-swatches" role="img" aria-label={`Colores disponibles: ${product.colors.map((color) => color.name).join(', ')}`}>
+          {product.colors.map((color) => <span className="home-product-swatch" key={color.name} aria-hidden="true" style={{ '--swatch': color.value }} />)}
         </span>
         <span className="home-product-price">S/.{homePrices[product.name] || product.price || 145}.00</span>
       </span>
@@ -109,63 +58,15 @@ function ProductCard({ product }) {
   </a>;
 }
 
-gsap.registerPlugin(ScrollToPlugin);
-
 function App() {
   useScrollReveal();
-  useEffect(() => {
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
-    let wheelTarget = window.scrollY;
-    let wheelTween = null;
-    let wheelIdleTimer;
-    // Smooth both wheel input and in-page links with GSAP ScrollToPlugin.
-    const handleWheel = (event) => {
-      if (event.ctrlKey || event.defaultPrevented || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
-      const eventElement = event.target instanceof Element ? event.target : null;
-      if (eventElement?.closest('input, textarea, select, [contenteditable="true"], [data-native-scroll]')) return;
-      let delta = event.deltaY;
-      if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) delta *= 16;
-      if (event.deltaMode === WheelEvent.DOM_DELTA_PAGE) delta *= window.innerHeight;
-      if (!delta) return;
-      if (!wheelTween?.isActive()) wheelTarget = window.scrollY;
-      const nextTarget = Math.max(0, Math.min(document.documentElement.scrollHeight - window.innerHeight, wheelTarget + delta));
-      if (nextTarget === wheelTarget) return;
-      event.preventDefault();
-      wheelTarget = nextTarget;
-      wheelTween?.kill();
-      wheelTween = gsap.to(window, { duration: 0.72, scrollTo: { y: wheelTarget, autoKill: false }, ease: 'power2.out', overwrite: true, onComplete: () => { wheelTarget = window.scrollY; wheelTween = null; } });
-      window.clearTimeout(wheelIdleTimer);
-      wheelIdleTimer = window.setTimeout(() => { if (!wheelTween?.isActive()) wheelTarget = window.scrollY; }, 220);
-    };
-    const resetWheelTarget = () => { wheelTween?.kill(); wheelTween = null; wheelTarget = window.scrollY; };
-    const handleClick = (event) => {
-      const link = event.target instanceof Element ? event.target.closest('a[href^="#"]') : null;
-      if (!link) return;
-      const target = document.querySelector(link.getAttribute('href'));
-      if (!target) return;
-      event.preventDefault();
-      resetWheelTarget();
-      wheelTarget = Math.max(0, target.getBoundingClientRect().top + window.scrollY - 90);
-      wheelTween = gsap.to(window, { duration: 1.15, scrollTo: { y: target, offsetY: 90, autoKill: false }, ease: 'power2.inOut', overwrite: true, onComplete: () => { wheelTarget = window.scrollY; wheelTween = null; } });
-    };
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    window.addEventListener('pointerdown', resetWheelTarget, { passive: true });
-    window.addEventListener('touchstart', resetWheelTarget, { passive: true });
-    window.addEventListener('keydown', resetWheelTarget);
-    document.addEventListener('click', handleClick);
-    return () => { window.removeEventListener('wheel', handleWheel); window.removeEventListener('pointerdown', resetWheelTarget); window.removeEventListener('touchstart', resetWheelTarget); window.removeEventListener('keydown', resetWheelTarget); window.clearTimeout(wheelIdleTimer); document.removeEventListener('click', handleClick); wheelTween?.kill(); };
-  }, []);
 
   return <>
     <a className="skip-link" href="#contenido">Saltar al contenido</a>
     <StoreHeader active="home" home />
-    <main id="contenido" className="home-page">
+    <main id="contenido" className="home-page" tabIndex={-1}>
       <h1 className="home-page-title">Malakoi · prendas con carácter para todos los días</h1>
-      <section className="home-hero" aria-label="Campaña Malakoi">
-        <img className="home-hero-desktop" src="/assets/images/figma-home-hero.jpg" alt="Campaña Malakoi con dos modelos y el emblema de la marca" fetchPriority="high" />
-        <MobileHeroCarousel />
-      </section>
+      <CampaignHero />
       <section className="home-products-section" id="novedades" aria-labelledby="products-title">
         <h2 id="products-title">PARA CUALQUIER TIPO DE TEMPORADA</h2>
         <div className="home-product-grid home-product-grid-featured">
@@ -173,7 +74,7 @@ function App() {
         </div>
       </section>
       <section className="home-editorial" id="nosotros" aria-label="Looks de la colección Malakoi" data-reveal>
-        <img src="/assets/images/figma-home-editorial.jpg" alt="Tres looks Malakoi: denim amplio, polerón negro y chaqueta azul" loading="lazy" />
+        <img src="/assets/images/figma-home-editorial.jpg" alt="Tres looks Malakoi: denim amplio, polerón negro y chaqueta azul" loading="lazy" decoding="async" />
       </section>
       <section className="home-products-section home-next-products" id="seleccion" aria-labelledby="second-products-title">
         <h2 id="second-products-title">TU PRÓXIMA PIEZA FAVORITA</h2>

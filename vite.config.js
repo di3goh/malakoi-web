@@ -93,6 +93,7 @@ function productSeoRoutes() {
         `${siteUrl}/`,
         `${siteUrl}/catalogo.html`,
         `${siteUrl}/contacto.html`,
+        `${siteUrl}/nosotros.html`,
         ...allProducts.map((product) => `${siteUrl}/${product.name === 'KIMONO JACKET' ? 'kimono-jacket.html' : `producto-${slugify(product.name)}.html`}`),
       ];
       const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((url) => `  <url><loc>${url}</loc></url>`).join('\n')}\n</urlset>`;
@@ -112,6 +113,7 @@ export default defineConfig({
         producto: resolve(process.cwd(), 'producto.html'),
         kimono: resolve(process.cwd(), 'kimono-jacket.html'),
         preguntas: resolve(process.cwd(), 'contacto.html'),
+        nosotros: resolve(process.cwd(), 'nosotros.html'),
         carrito: resolve(process.cwd(), 'carrito.html'),
       },
     },

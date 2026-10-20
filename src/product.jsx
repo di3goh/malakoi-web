@@ -5,7 +5,8 @@ import StoreHeader from './components/StoreHeader.jsx';
 import StoreFooter from './components/StoreFooter.jsx';
 import useScrollReveal from './useScrollReveal.js';
 import { products, lowerProducts } from './data/products.js';
-import { formatPrice, formatProductPrice, readCurrency } from './data/currency.js';
+import { addBagItem } from './data/bag.js';
+import { formatProductPrice, readCurrency } from './data/currency.js';
 import './styles.css';
 import './product.css';
 
@@ -59,22 +60,20 @@ function ProductPage() {
   const whatsappHref = `https://wa.me/51906575746?text=${encodeURIComponent(whatsappText)}`;
 
   const addToBag = () => {
-    const bag = JSON.parse(localStorage.getItem('malakoiBag') || '[]');
-    bag.push({ name: product.name, price: `S/ ${price}.00`, usdPrice: product.usdPrice, image, color: variant?.name || '', size, quantity });
-    localStorage.setItem('malakoiBag', JSON.stringify(bag));
+    addBagItem({ name: product.name, price: `S/ ${price}.00`, usdPrice: product.usdPrice, image, color: variant?.name || '', size, quantity });
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2200);
   };
 
   return <>
-    <StoreHeader active="catalog" />
-    <main className="product-page">
-      <nav className="product-breadcrumb" aria-label="Ruta de navegación"><a href="/">Inicio</a><ChevronRight size={14} /><a href="/catalogo.html">Catálogo</a><ChevronRight size={14} /><span aria-current="page">{product.name}</span></nav>
+    <StoreHeader active="product" shopPage />
+    <main id="contenido" className="product-page" tabIndex={-1}>
+      <nav className="product-breadcrumb" aria-label="Ruta de navegación"><a href="/">Inicio</a><ChevronRight size={14} aria-hidden="true" /><a href="/catalogo.html">Catálogo</a><ChevronRight size={14} aria-hidden="true" /><span aria-current="page">{product.name}</span></nav>
       <div className="product-detail-layout" data-reveal>
         <section className="product-gallery" aria-label={`Fotos de ${product.name}`}>
-          <div className="product-main-photo"><img src={image} alt={variant ? `${product.name}, color ${variant.name}` : product.alt} /></div>
+          <div className="product-main-photo"><img src={image} alt={variant ? `${product.name}, color ${variant.name}` : product.alt} fetchPriority="high" decoding="async" /></div>
           {product.colors.some((color) => color.image) && <div className="product-thumbnails" aria-label="Fotos por color">
-            {product.colors.filter((color) => color.image).map((color) => <button key={color.name} className={variant?.name === color.name ? 'is-selected' : ''} type="button" onClick={() => setVariant(color)} aria-label={`Ver color ${color.name}`}><img src={color.image} alt={`Color ${color.name}`} /></button>)}
+            {product.colors.filter((color) => color.image).map((color) => <button key={color.name} className={variant?.name === color.name ? 'is-selected' : ''} type="button" onClick={() => setVariant(color)} aria-label={`Ver color ${color.name}`} aria-pressed={variant?.name === color.name}><img src={color.image} alt="" loading="lazy" decoding="async" /></button>)}
           </div>}
         </section>
 
@@ -85,11 +84,11 @@ function ProductPage() {
           <div className="product-detail-price-row"><p className="product-detail-price">{formatProductPrice(price, currency, product.usdPrice)}</p><label className="product-currency-control"><span>Moneda</span><select value={currency} onChange={(event) => setStoreCurrency(event.target.value)} aria-label="Elegir moneda"><option value="PEN">PEN · S/</option><option value="USD">USD · $</option></select><span className="currency-note">{product.usdPrice != null ? 'Precio en USD indicado' : 'USD referencial'}</span></label></div>
           {isClasp && <p className="product-shipping-note">Envío no incluido</p>}
 
-          {product.colors.length > 0 && <fieldset className="product-option product-color-option"><legend>Color{variant ? `: ${variant.name}` : ''}</legend><div className="product-color-list">{product.colors.map((color) => <button type="button" key={color.name} className={`product-color ${variant?.name === color.name ? 'is-selected' : ''}`} onClick={() => setVariant(color)} aria-label={`Seleccionar color ${color.name}`} aria-pressed={variant?.name === color.name} title={color.name} style={{ '--product-swatch': color.value }}><span /></button>)}</div><p className="selected-color">{variant?.name || 'Selecciona un color'}</p></fieldset>}
+          {product.colors.length > 0 && <fieldset className="product-option product-color-option"><legend>Color{variant ? `: ${variant.name}` : ''}</legend><div className="product-color-list">{product.colors.map((color) => <button type="button" key={color.name} className={`product-color ${color.image ? 'has-preview' : ''} ${variant?.name === color.name ? 'is-selected' : ''}`} onClick={() => setVariant(color)} aria-label={`Seleccionar color ${color.name}`} aria-pressed={variant?.name === color.name} title={color.name} style={{ '--product-swatch': color.value }}>{color.image ? <><img src={color.image} alt="" loading="lazy" /><span className="product-color-label">{color.name}</span></> : <span className="product-color-dot" />}</button>)}</div><p className="selected-color">{variant?.name || 'Selecciona un color'}</p></fieldset>}
 
           <fieldset className="product-option"><legend>Talla</legend><div className="product-size-list">{(product.sizes || (isKnot ? ['Estándar', 'L'] : isMori ? ['S/M', 'L'] : ['S', 'M', 'L', 'XL'])).map((item) => <button type="button" key={item} className={size === item ? 'is-selected' : ''} aria-pressed={size === item} onClick={() => setSize(item)}>{item}</button>)}</div></fieldset>
 
-          <div className="product-quantity-row"><span>Cantidad</span><div className="quantity-control"><button type="button" aria-label="Reducir cantidad" onClick={() => setQuantity((value) => Math.max(1, value - 1))}><Minus size={15} /></button><output aria-live="polite">{quantity}</output><button type="button" aria-label="Aumentar cantidad" onClick={() => setQuantity((value) => value + 1)}><Plus size={15} /></button></div></div>
+          <div className="product-quantity-row"><span>Cantidad</span><div className="quantity-control" role="group" aria-label="Cantidad del producto"><button type="button" aria-label="Reducir cantidad" onClick={() => setQuantity((value) => Math.max(1, value - 1))}><Minus size={15} aria-hidden="true" /></button><output aria-live="polite">{quantity}</output><button type="button" aria-label="Aumentar cantidad" onClick={() => setQuantity((value) => value + 1)}><Plus size={15} aria-hidden="true" /></button></div></div>
           <button className="product-add-button" type="button" onClick={addToBag}><ShoppingBag size={17} />{added ? 'Añadido a tu bolsa' : 'Añadir a la bolsa'}</button>
           <a className="product-whatsapp-button" href={whatsappHref} target="_blank" rel="noreferrer"><MessageCircle size={18} />Pedir por WhatsApp</a>
 
@@ -110,7 +109,7 @@ function ProductPage() {
       <section className="related-products" aria-labelledby="related-title">
         <div className="related-heading"><p className="eyebrow">Completa tu look</p><h2 id="related-title">También te podría gustar</h2></div>
         <div className="related-grid">{recommendations.map((item) => <a className="related-card" data-reveal href={productHref(item.name)} key={item.name}>
-          <span className="related-image"><img src={item.image} alt={item.alt} loading="lazy" /></span>
+          <span className="related-image"><img src={item.image} alt={item.alt} loading="lazy" decoding="async" /></span>
           <span className="related-category">{item.category}</span><strong>{item.name}</strong><span className="related-price">{formatProductPrice(item.price || 145, currency, item.usdPrice)}</span>
         </a>)}</div>
       </section>

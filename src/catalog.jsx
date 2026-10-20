@@ -5,7 +5,8 @@ import StoreHeader from './components/StoreHeader.jsx';
 import StoreFooter from './components/StoreFooter.jsx';
 import useScrollReveal from './useScrollReveal.js';
 import { products, lowerProducts } from './data/products.js';
-import { formatPrice, formatProductPrice, readCurrency } from './data/currency.js';
+import { addBagItem } from './data/bag.js';
+import { formatProductPrice, readCurrency } from './data/currency.js';
 import './styles.css';
 import './catalog.css';
 
@@ -41,16 +42,14 @@ function Catalog() {
 
   const addToBag = () => {
     if (!selected) return;
-    const bag = JSON.parse(localStorage.getItem('malakoiBag') || '[]');
-    bag.push({ name: selected.name, price: `S/ ${selected.price || 145}.00`, usdPrice: selected.usdPrice, image: selected.image });
-    localStorage.setItem('malakoiBag', JSON.stringify(bag));
+    addBagItem({ name: selected.name, price: `S/ ${selected.price || 145}.00`, usdPrice: selected.usdPrice, image: selected.image, quantity: 1 });
     setSelected(null);
   };
   const toggleSaved = (name) => setSaved((current) => current.includes(name) ? current.filter((item) => item !== name) : [...current, name]);
 
   return <>
-    <StoreHeader active="catalog" />
-    <main className="catalog-main">
+    <StoreHeader active="catalog" shopPage />
+    <main id="contenido" className="catalog-main" tabIndex={-1}>
       <div className="catalog-breadcrumb"><a href="/">Inicio</a><ChevronRight size={14} aria-hidden="true" /><span>Catálogo</span></div>
       <section className="catalog-intro" aria-labelledby="catalog-title">
         <div><h1 id="catalog-title">Catálogo</h1><p className="catalog-subtitle">Prendas para moverte y vestir a tu manera.</p></div>
@@ -62,10 +61,10 @@ function Catalog() {
       </section>
       <div className="catalog-results"><p>{visibleProducts.length} prendas</p><div className="catalog-price-tools"><label htmlFor="catalog-currency">Moneda</label><select id="catalog-currency" value={currency} onChange={(event) => setStoreCurrency(event.target.value)} aria-label="Elegir moneda"><option value="PEN">PEN · S/</option><option value="USD">USD · $</option></select><span className="currency-note">USD referencial</span></div></div>
       <section className="product-grid catalog-product-grid" aria-label="Productos del catálogo">
-        {visibleProducts.map((product) => <article className="product-card catalog-product-card" data-reveal key={product.name} role="link" tabIndex={0} onClick={(event) => { if (!event.target.closest('button')) window.location.href = productHref(product.name); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); window.location.href = productHref(product.name); } }}>
-          <div className="product-image catalog-image-button"><img src={product.image} alt={product.alt} loading="lazy" /></div>
+        {visibleProducts.map((product) => <article className="product-card catalog-product-card" data-reveal key={product.name}>
+          <a className="catalog-product-link" href={productHref(product.name)}><span className="product-image catalog-image-button"><img src={product.image} alt={product.alt} loading="lazy" decoding="async" /></span>
+          <div className="product-info"><p className="product-category">{product.category}</p><h2>{product.name}</h2><div className="product-bottom"><div className="swatches" role="img" aria-label={`Colores disponibles: ${product.colors.map((color) => color.name).join(', ')}`}>{product.colors.map((color) => <span className="swatch" key={color.name} aria-hidden="true" style={{ '--swatch': color.value }} />)}</div><span className="price">{formatProductPrice(product.price || 145, currency, product.usdPrice)}</span></div></div></a>
           <button className={`save-button ${saved.includes(product.name) ? 'is-saved' : ''}`} type="button" aria-label={`${saved.includes(product.name) ? 'Quitar de' : 'Añadir a'} favoritos: ${product.name}`} aria-pressed={saved.includes(product.name)} onClick={() => toggleSaved(product.name)}><Heart size={18} fill={saved.includes(product.name) ? 'currentColor' : 'none'} /></button>
-          <div className="product-info"><p className="product-category">{product.category}</p><h2>{product.name}</h2><div className="product-bottom"><div className="swatches" aria-label={`Colores disponibles para ${product.name}`}>{product.colors.map((color) => <span className="swatch" key={color.name} title={color.name} aria-label={color.name} style={{ '--swatch': color.value }} />)}</div><span className="price">{formatProductPrice(product.price || 145, currency, product.usdPrice)}</span></div></div>
         </article>)}
         {visibleProducts.length === 0 && <p className="catalog-empty">No encontramos prendas con ese nombre.</p>}
       </section>

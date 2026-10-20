@@ -9,7 +9,7 @@ export default function StoreFooter() {
         <p>Tu estilo, tus reglas.</p>
       </section>
       <nav className="site-footer-column" aria-label="Explora Malakoi">
-        <h2>Explora</h2><a href="/catalogo.html">Catálogo</a><a href="/#novedades">Novedades</a><a href="/carrito.html">Bolsa</a><a href="/contacto.html">Preguntas frecuentes</a>
+        <h2>Explora</h2><a href="/catalogo.html">Catálogo</a><a href="/carrito.html">Bolsa</a><a href="/contacto.html">Preguntas frecuentes</a>
       </nav>
         <section className="site-footer-column site-footer-contact">
         <h2>Contacto</h2><p>¿Tienes una pregunta o necesitas ayuda?</p><a href="tel:+51906575746"><strong>+51 906 575 746</strong></a><a href="https://wa.me/51906575746" className="site-footer-contact-link" target="_blank" rel="noreferrer">WhatsApp</a>

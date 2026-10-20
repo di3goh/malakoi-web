@@ -19,8 +19,8 @@ const questions = [
 function FAQPage() {
   useScrollReveal();
   return <>
-    <StoreHeader active="faq" />
-    <main className="faq-page" id="contenido">
+    <StoreHeader active="shipping" shopPage />
+    <main className="faq-page" id="contenido" tabIndex={-1}>
       <section className="faq-content" data-reveal>
         <p className="eyebrow">Ayuda</p>
         <h1>Preguntas frecuentes</h1>

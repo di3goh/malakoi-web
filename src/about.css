@@ -1,0 +1,9 @@
+.about-coming-soon{min-height:calc(100svh - 170px);margin-top:170px;padding:32px 24px;display:grid;place-items:center;background:#f5f5f5;color:#171715;text-align:center}
+.about-coming-soon-content{display:flex;flex-direction:column;align-items:center;gap:14px}
+.about-coming-soon-content img{display:block;width:min(230px,62vw);height:auto;object-fit:contain}
+.about-coming-soon-content h1{margin:12px 0 0;font:800 clamp(30px,4vw,46px)/1.05 Inter,system-ui,sans-serif;letter-spacing:-.05em}
+.about-coming-soon-content p{margin:0;color:#77766f;font-size:14px;letter-spacing:.06em}
+html[data-theme="dark"] .about-coming-soon{background:#101012;color:#f2f2f2}
+html[data-theme="dark"] .about-coming-soon-content img{filter:brightness(0) invert(1)}
+html[data-theme="dark"] .about-coming-soon-content p{color:#b8b8bd}
+@media(max-width:800px){.about-coming-soon{min-height:calc(100svh - 154px);margin-top:154px}}
