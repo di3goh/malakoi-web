@@ -15,7 +15,9 @@ function SocialLinks({ className }) {
 
 export { SocialLinks };
 
-export default function StoreHeader({ active = 'home', home = false, shopPage = false }) {
+const HEADER_LINKS = [['CATÁLOGO', '/catalogo.html', 'catalog'], ['NOSOTROS', '/nosotros.html', 'about'], ['ENVÍOS', '/contacto.html', 'shipping']];
+
+export default function StoreHeader({ active = 'home', home = false }) {
   useSmoothScroll();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -92,7 +94,6 @@ export default function StoreHeader({ active = 'home', home = false, shopPage = 
       else bagCloseRef.current?.focus();
     });
   };
-  const links = [['CATÁLOGO', '/catalogo.html', 'catalog'], ['NOSOTROS', '/nosotros.html', 'about'], ['ENVÍOS', '/contacto.html', 'shipping']];
   return createPortal(<>
     {!home && <a className="skip-link" href="#contenido">Saltar al contenido</a>}
     {!home && <><div className="shipping-marquee" role="region" aria-label="Envíos a todo el Perú, Lima y provincias"><div className="shipping-marquee-track" aria-hidden="true">{Array.from({ length: 8 }, (_, index) => <span key={index}>ENVÍOS A TODO EL PERÚ, LIMA Y PROVINCIAS <b>✦</b></span>)}</div></div>
@@ -101,7 +102,7 @@ export default function StoreHeader({ active = 'home', home = false, shopPage = 
       <button className="menu-toggle" type="button" aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={menuOpen} aria-controls="primary-navigation" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
       <a className="brand" href="/" aria-label="Malakoi, ir al inicio"><img src="/imagen_2026-10-02_215000798-Photoroom.png" alt="Malakoi" /></a>
       <nav id="primary-navigation" className={`primary-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Navegación principal">
-        {links.map(([label, href, key]) => <a key={key} className={active === key ? 'is-active' : ''} href={href}>{label}</a>)}
+        {HEADER_LINKS.map(([label, href, key]) => <a key={key} className={active === key ? 'is-active' : ''} href={href}>{label}</a>)}
       </nav>
       <div className="header-actions">
         <a className="icon-link search-link" href="/catalogo.html" aria-label="Buscar en el catálogo"><Search size={19} strokeWidth={1.7} /></a>

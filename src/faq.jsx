@@ -19,7 +19,7 @@ const questions = [
 function FAQPage() {
   useScrollReveal();
   return <>
-    <StoreHeader active="shipping" shopPage />
+    <StoreHeader active="shipping" />
     <main className="faq-page" id="contenido" tabIndex={-1}>
       <section className="faq-content" data-reveal>
         <p className="eyebrow">Ayuda</p>

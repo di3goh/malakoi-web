@@ -48,7 +48,7 @@ function Catalog() {
   const toggleSaved = (name) => setSaved((current) => current.includes(name) ? current.filter((item) => item !== name) : [...current, name]);
 
   return <>
-    <StoreHeader active="catalog" shopPage />
+    <StoreHeader active="catalog" />
     <main id="contenido" className="catalog-main" tabIndex={-1}>
       <div className="catalog-breadcrumb"><a href="/">Inicio</a><ChevronRight size={14} aria-hidden="true" /><span>Catálogo</span></div>
       <section className="catalog-intro" aria-labelledby="catalog-title">

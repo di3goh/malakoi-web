@@ -66,7 +66,7 @@ function ProductPage() {
   };
 
   return <>
-    <StoreHeader active="product" shopPage />
+    <StoreHeader active="product" />
     <main id="contenido" className="product-page" tabIndex={-1}>
       <nav className="product-breadcrumb" aria-label="Ruta de navegación"><a href="/">Inicio</a><ChevronRight size={14} aria-hidden="true" /><a href="/catalogo.html">Catálogo</a><ChevronRight size={14} aria-hidden="true" /><span aria-current="page">{product.name}</span></nav>
       <div className="product-detail-layout" data-reveal>

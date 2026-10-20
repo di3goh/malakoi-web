@@ -7,7 +7,7 @@ import './about.css';
 
 function AboutPage() {
   return <>
-    <StoreHeader active="about" shopPage />
+    <StoreHeader active="about" />
     <main id="contenido" className="about-coming-soon" tabIndex={-1}>
       <div className="about-coming-soon-content">
         <img src="/imagen_2026-10-02_215000798-Photoroom.png" alt="Malakoi" />
