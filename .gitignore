@@ -1,2 +1,9 @@
 node_modules/
 .DS_Store
+dist/
+.file-versions/
+.od-skills/
+*.artifact.json
+CLONE_AUDIT.md
+CLONE_REPORT.md
+NOTES.md

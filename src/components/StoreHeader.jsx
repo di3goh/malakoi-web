@@ -12,18 +12,28 @@ function SocialLinks({ className }) {
 
 export { SocialLinks };
 
-export default function StoreHeader({ active = 'home' }) {
+export default function StoreHeader({ active = 'home', home = false }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('malakoiTheme') === 'dark');
   useEffect(() => {
     document.documentElement.dataset.theme = darkMode ? 'dark' : 'light';
     localStorage.setItem('malakoiTheme', darkMode ? 'dark' : 'light');
   }, [darkMode]);
-  const links = [['CATÁLOGO', '/catalogo.html', 'catalog'], ['PREGUNTAS', '/contacto.html', 'faq']];
+  useEffect(() => {
+    if (!home) return undefined;
+    const updateScrolled = () => setScrolled(window.scrollY > 32);
+    updateScrolled();
+    window.addEventListener('scroll', updateScrolled, { passive: true });
+    return () => window.removeEventListener('scroll', updateScrolled);
+  }, [home]);
+  const links = home
+    ? [['CATÁLOGO', '/catalogo.html', 'catalog'], ['NOSOTROS', '#nosotros', 'about'], ['ENVÍOS', '/contacto.html', 'shipping']]
+    : [['CATÁLOGO', '/catalogo.html', 'catalog'], ['PREGUNTAS', '/contacto.html', 'faq']];
   return <>
-    <div className="shipping-marquee" role="region" aria-label="Envíos a todo el Perú, Lima y provincias"><div className="shipping-marquee-track" aria-hidden="true">{Array.from({ length: 8 }, (_, index) => <span key={index}>ENVÍOS A TODO EL PERÚ, LIMA Y PROVINCIAS <b>✦</b></span>)}</div></div>
-    <div className="announcement"><p className="announcement-message">TE AMO, PERO ESCOJO MALAKOI <span aria-hidden="true">♥</span></p><SocialLinks className="social-links" /></div>
-    <header className="site-header">
+    {!home && <><div className="shipping-marquee" role="region" aria-label="Envíos a todo el Perú, Lima y provincias"><div className="shipping-marquee-track" aria-hidden="true">{Array.from({ length: 8 }, (_, index) => <span key={index}>ENVÍOS A TODO EL PERÚ, LIMA Y PROVINCIAS <b>✦</b></span>)}</div></div>
+    <div className="announcement"><p className="announcement-message">TE AMO, PERO ESCOJO MALAKOI <span aria-hidden="true">♥</span></p><SocialLinks className="social-links" /></div></>}
+    <header className={`site-header${home ? ` home-header${scrolled ? ' is-scrolled' : ''}` : ''}`}>
       <button className="menu-toggle" type="button" aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={menuOpen} aria-controls="primary-navigation" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
       <a className="brand" href="/" aria-label="Malakoi, ir al inicio"><img src="/imagen_2026-10-02_215000798-Photoroom.png" alt="Malakoi" /></a>
       <nav id="primary-navigation" className={`primary-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Navegación principal">

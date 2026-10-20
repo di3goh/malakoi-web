@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /carrito.html
-Disallow: /producto.html
-Sitemap: https://malakoi.web-vercel.app/sitemap.xml

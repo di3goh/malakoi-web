@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowDown, ArrowRight, Heart } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import StoreHeader from './components/StoreHeader.jsx';
@@ -11,31 +10,60 @@ import './styles.css';
 
 const productHref = (name) => name === 'KIMONO JACKET' ? '/kimono-jacket.html' : `/producto-${encodeURIComponent(name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}.html`;
 
+const featuredProducts = [
+  lowerProducts.find((product) => product.name === 'CLASP JACKET'),
+  products.find((product) => product.name === 'KNOT ZIP-UP JACKET'),
+  lowerProducts.find((product) => product.name === 'KIMONO V3'),
+  products.find((product) => product.name === 'MORI DENIM JACKET'),
+  products.find((product) => product.name === 'J-JACKET'),
+  lowerProducts.find((product) => product.name === 'CAMISA LOTUS'),
+  products.find((product) => product.name === 'KIMONO JACKET'),
+  lowerProducts.find((product) => product.name === 'BASIC TANK TOP'),
+];
+
+const nextProducts = ['PARACHUTE JOGGER', 'POLO 3/4', 'WIDE RAW DENIM PANTS', 'WIDE BAGGY CORDUROY']
+  .map((name) => lowerProducts.find((product) => product.name === name));
+const homePrices = { 'MORI DENIM JACKET': 180, 'POLO 3/4': 65 };
+const homeImages = {
+  'CLASP JACKET': '/assets/images/home-clasp.jpg',
+  'KNOT ZIP-UP JACKET': '/assets/images/home-knot.jpg',
+  'KIMONO V3': '/assets/images/home-kimono-v3.jpg',
+  'MORI DENIM JACKET': '/assets/images/home-mori.jpg',
+  'J-JACKET': '/assets/images/home-j-jacket.jpg',
+  'CAMISA LOTUS': '/assets/images/home-lotus.jpg',
+  'KIMONO JACKET': '/assets/images/home-kimono.jpg',
+  'BASIC TANK TOP': '/assets/images/home-tank.jpg',
+  'PARACHUTE JOGGER': '/assets/images/home-parachute.jpg',
+  'POLO 3/4': '/assets/images/home-polo.jpg',
+  'WIDE RAW DENIM PANTS': '/assets/images/home-wide-raw.jpg',
+  'WIDE BAGGY CORDUROY': '/assets/images/home-wide-baggy.jpg',
+};
+
+function ProductCard({ product }) {
+  return <a className="home-product-card" href={productHref(product.name)} data-reveal>
+    <span className="home-product-image"><img src={homeImages[product.name] || product.image} alt={product.alt} loading="lazy" /></span>
+    <span className="home-product-info">
+      <span className="home-product-name">{product.name}</span>
+      <span className="home-product-details">
+        <span className="home-product-swatches" aria-label={`Colores disponibles: ${product.colors.map((color) => color.name).join(', ')}`}>
+          {product.colors.map((color) => <span className="home-product-swatch" key={color.name} title={color.name} style={{ '--swatch': color.value }} />)}
+        </span>
+        <span className="home-product-price">S/.{homePrices[product.name] || product.price || 145}.00</span>
+      </span>
+    </span>
+  </a>;
+}
+
 gsap.registerPlugin(ScrollToPlugin);
 
 function App() {
   useScrollReveal();
-  const [saved, setSaved] = useState([]);
-  const [heroSlide, setHeroSlide] = useState(0);
-  const hero = useRef(null);
-
-  useEffect(() => {
-    const tabletOrSmaller = window.matchMedia('(max-width: 1024px)');
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!tabletOrSmaller.matches || reduceMotion) return;
-    const timer = window.setInterval(() => setHeroSlide((current) => (current + 1) % 3), 4800);
-    return () => window.clearInterval(timer);
-  }, []);
-
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) return;
     let wheelTarget = window.scrollY;
     let wheelTween = null;
     let wheelIdleTimer;
-    const context = gsap.context(() => {
-      gsap.from('.hero-copy > *', { y: 28, opacity: 0, duration: 0.8, stagger: 0.12, ease: 'power2.out', delay: 0.15 });
-    }, hero);
     // Smooth both wheel input and in-page links with GSAP ScrollToPlugin.
     const handleWheel = (event) => {
       if (event.ctrlKey || event.defaultPrevented || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
@@ -71,52 +99,30 @@ function App() {
     window.addEventListener('touchstart', resetWheelTarget, { passive: true });
     window.addEventListener('keydown', resetWheelTarget);
     document.addEventListener('click', handleClick);
-    return () => { window.removeEventListener('wheel', handleWheel); window.removeEventListener('pointerdown', resetWheelTarget); window.removeEventListener('touchstart', resetWheelTarget); window.removeEventListener('keydown', resetWheelTarget); window.clearTimeout(wheelIdleTimer); document.removeEventListener('click', handleClick); wheelTween?.kill(); context.revert(); };
+    return () => { window.removeEventListener('wheel', handleWheel); window.removeEventListener('pointerdown', resetWheelTarget); window.removeEventListener('touchstart', resetWheelTarget); window.removeEventListener('keydown', resetWheelTarget); window.clearTimeout(wheelIdleTimer); document.removeEventListener('click', handleClick); wheelTween?.kill(); };
   }, []);
-
-  const toggleSaved = (name) => setSaved((current) => current.includes(name) ? current.filter((item) => item !== name) : [...current, name]);
 
   return <>
     <a className="skip-link" href="#contenido">Saltar al contenido</a>
-    <StoreHeader active="home" />
-    <main id="contenido">
-      <section className="hero" ref={hero} aria-labelledby="hero-title">
-        <picture className="hero-media">
-          {/* Reemplaza /hero-mobile.jpg con tu arte vertical; el banner existente sigue para escritorio. */}
-          <source media="(max-width: 700px)" srcSet="/MALAKOI-BANNER.jpg" />
-          <img src="/MALAKOI-BANNER.jpg" alt="Campaña Malakoi: prendas contemporáneas en una composición editorial" fetchPriority="high" />
-        </picture>
-        <div className="hero-mobile-carousel" aria-label="Campañas Malakoi" aria-roledescription="carrusel">
-          {['/assets/images/hero-mobile-1.jpg', '/assets/images/hero-mobile-2.jpg', '/assets/images/hero-mobile-3.jpg'].map((image, index) => <img key={image} className={heroSlide === index ? 'is-active' : ''} src={image} alt={['Look Malakoi con polo blanco y denim amplio', 'Look Malakoi con top negro y bolso estampado', 'Look Malakoi con tank top verde oliva y denim'][index]} loading={index === 0 ? 'eager' : 'lazy'} />)}
-        </div>
-        <div className="hero-shade" />
-        <div className="hero-copy">
-          <div className="hero-label"><h1 id="hero-title">Prendas con carácter para todos los días.</h1></div>
-          <a className="button hero-button" href="/catalogo.html">Ver catálogo <ArrowRight size={17} aria-hidden="true" /></a>
-        </div>
-        <div className="hero-pagination" role="group" aria-label="Elegir imagen de campaña">
-          {[0, 1, 2].map((index) => <button key={index} type="button" className={heroSlide === index ? 'is-active' : ''} aria-label={`Mostrar imagen ${index + 1}`} aria-pressed={heroSlide === index} onClick={() => setHeroSlide(index)} />)}
-        </div>
-        <a className="hero-scroll" href="#novedades"><span>Desliza para explorar</span><ArrowDown size={16} aria-hidden="true" /></a>
+    <StoreHeader active="home" home />
+    <main id="contenido" className="home-page">
+      <h1 className="home-page-title">Malakoi · prendas con carácter para todos los días</h1>
+      <section className="home-hero" aria-label="Campaña Malakoi">
+        <img src="/assets/images/figma-home-hero.jpg" alt="Campaña Malakoi con dos modelos y el emblema de la marca" fetchPriority="high" />
       </section>
-      <section className="section products-section" id="novedades" aria-labelledby="products-title" data-reveal>
-        <div className="section-heading"><div><p className="eyebrow">Selección Malakoi</p><h2 id="products-title">Para cada tipo de temporada</h2></div></div>
-        <div className="product-grid">
-          {products.map((product) => <article className="product-card" data-reveal key={product.name} role="link" tabIndex={0} onClick={(event) => { if (!event.target.closest('button')) window.location.href = productHref(product.name); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); window.location.href = productHref(product.name); } }}>
-            <div className="product-image"><img src={product.image} alt={product.alt} loading="lazy" /></div>
-            <button className={`save-button ${saved.includes(product.name) ? 'is-saved' : ''}`} type="button" aria-label={`${saved.includes(product.name) ? 'Quitar de' : 'Añadir a'} favoritos: ${product.name}`} aria-pressed={saved.includes(product.name)} onClick={() => toggleSaved(product.name)}><Heart size={18} fill={saved.includes(product.name) ? 'currentColor' : 'none'} /></button>
-            <div className="product-info"><p className="product-category">{product.category}</p><h3>{product.name}</h3><div className="product-bottom"><div className="swatches" aria-label={`Colores disponibles para ${product.name}`}>{product.colors.map((color) => <span className="swatch" key={color.name} title={color.name} aria-label={color.name} style={{ '--swatch': color.value }} />)}</div><span className="price">S/ {product.price || 145}.00</span></div></div>
-          </article>)}
+      <section className="home-products-section" id="novedades" aria-labelledby="products-title">
+        <h2 id="products-title">PARA CUALQUIER TIPO DE TEMPORADA</h2>
+        <div className="home-product-grid home-product-grid-featured">
+          {featuredProducts.map((product) => <ProductCard key={product.name} product={product} />)}
         </div>
       </section>
-      <section className="section products-section second-products" id="seleccion" aria-labelledby="second-products-title" data-reveal>
-        <div className="section-heading"><div><p className="eyebrow">Encuentra tus favoritos</p><h2 id="second-products-title">Tu próxima pieza favorita</h2></div></div>
-        <div className="product-grid">
-          {lowerProducts.map((product) => <article className="product-card" data-reveal key={`second-${product.name}`} role="link" tabIndex={0} onClick={(event) => { if (!event.target.closest('button')) window.location.href = productHref(product.name); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); window.location.href = productHref(product.name); } }}>
-            <div className="product-image"><img src={product.image} alt={product.alt} loading="lazy" /></div>
-            <button className={`save-button ${saved.includes(product.name) ? 'is-saved' : ''}`} type="button" aria-label={`${saved.includes(product.name) ? 'Quitar de' : 'Añadir a'} favoritos: ${product.name}`} aria-pressed={saved.includes(product.name)} onClick={() => toggleSaved(product.name)}><Heart size={18} fill={saved.includes(product.name) ? 'currentColor' : 'none'} /></button>
-            <div className="product-info"><p className="product-category">{product.category}</p><h3>{product.name}</h3><div className="product-bottom"><div className="swatches" aria-label={`Colores disponibles para ${product.name}`}>{product.colors.map((color) => <span className="swatch" key={color.name} title={color.name} aria-label={color.name} style={{ '--swatch': color.value }} />)}</div><span className="price">S/ {product.price || 145}.00</span></div></div>
-          </article>)}
+      <section className="home-editorial" id="nosotros" aria-label="Looks de la colección Malakoi" data-reveal>
+        <img src="/assets/images/figma-home-editorial.jpg" alt="Tres looks Malakoi: denim amplio, polerón negro y chaqueta azul" loading="lazy" />
+      </section>
+      <section className="home-products-section home-next-products" id="seleccion" aria-labelledby="second-products-title">
+        <h2 id="second-products-title">TU PRÓXIMA PIEZA FAVORITA</h2>
+        <div className="home-product-grid home-product-grid-next">
+          {nextProducts.map((product) => <ProductCard key={product.name} product={product} />)}
         </div>
       </section>
       <section className="community-section" aria-labelledby="community-title">
@@ -126,10 +132,6 @@ function App() {
             {['look-1.jpg','look-2.jpg','look-3.jpg','look-4.jpg','look-5.jpg','look-6.jpg','look-7.jpg','look-8.jpg'].map((image, index) => <div className="community-card" key={`${copy}-${image}`} aria-hidden="true"><img src={`/assets/images/community/${image}`} alt={`Look Malakoi de la comunidad ${index + 1}`} loading="lazy" /><span>@malakoi.pe</span></div>)}
           </div>)}
         </div></div>
-      </section>
-      <section className="brand-story" aria-labelledby="story-title" data-reveal>
-        <div className="story-image"><img src="/assets/images/bg2.jpg" alt="Tres looks Malakoi: denim amplio, camiseta blanca y camisa clara con pantalón de pana" loading="lazy" /></div>
-        <div className="story-copy"><div className="hero-label"><h2 id="story-title">Una forma propia de vestir.</h2></div><a className="button hero-button" href="/catalogo.html">Descubrir Malakoi <ArrowRight size={17} aria-hidden="true" /></a></div>
       </section>
     </main>
     <StoreFooter />
