@@ -9,7 +9,7 @@
 #site-header-root .site-header:not(.home-header){position:relative;top:auto}
 .header-actions button.bag-link{background:transparent;cursor:pointer;font-family:inherit}
 .header-actions .bag-link .bag-count{min-width:18px;height:18px;padding:0 4px;display:grid;place-items:center;border-radius:50%;background:#171715;color:#fff;font-size:10px;letter-spacing:0}
-.bag-drawer-backdrop{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.38);display:flex;justify-content:flex-end;animation:bag-backdrop-in .2s ease both}
+.bag-drawer-backdrop{position:fixed;inset:0;z-index:1000;overflow:clip;background:rgba(0,0,0,.38);display:flex;justify-content:flex-end;animation:bag-backdrop-in .2s ease both}
 .bag-drawer{width:min(440px,100vw);height:100%;padding:28px 30px 24px;background:#f0f0f0;color:#171715;display:flex;flex-direction:column;box-shadow:-12px 0 40px rgba(0,0,0,.12);animation:bag-drawer-in .28s cubic-bezier(.2,.75,.25,1) both}
 .bag-drawer-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:1px solid #d4d4d4}
 .bag-drawer-eyebrow{margin:0 0 6px;font-size:9px;font-weight:800;letter-spacing:.2em}
@@ -20,7 +20,7 @@
 .bag-preview-remove{width:34px;height:34px;flex:none;align-self:center;display:grid;place-items:center;border:1px solid #d4d4d4;border-radius:50%;background:transparent;color:inherit;cursor:pointer;transition:background .18s,color .18s,border-color .18s}.bag-preview-remove:hover{background:#171715;color:#fff;border-color:#171715}.bag-preview-remove:focus-visible{outline:2px solid currentColor;outline-offset:3px}
 .bag-empty-preview{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#5d5d5d}.bag-empty-preview p{margin:0;font-size:14px}.bag-empty-preview button,.bag-drawer-footer button{padding:8px 0;border:0;background:none;color:inherit;font:inherit;font-size:12px;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
 .bag-drawer-footer{padding-top:18px;border-top:1px solid #d4d4d4}.bag-drawer-footer a{min-height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 17px;background:#171715;color:#fff;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.bag-drawer-footer button{display:block;margin:10px auto 0}
-body.bag-drawer-open{overflow:hidden}
+html:has(body.bag-drawer-open){overflow-x:clip}body.bag-drawer-open{overflow:hidden}
 @keyframes bag-backdrop-in{from{opacity:0}to{opacity:1}}@keyframes bag-drawer-in{from{transform:translateX(100%)}to{transform:translateX(0)}}
 .brand{display:flex;width:142px;height:38px;align-items:center;flex:none}.brand img{width:100%;height:100%;object-fit:contain}
 .site-header .brand{position:absolute;left:50%;transform:translateX(-50%);z-index:1}
