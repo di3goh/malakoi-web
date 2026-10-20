@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowRight, ChevronDown, ChevronRight, Heart, X } from 'lucide-react';
+import { ArrowRight, ChevronDown, ChevronRight, Heart, Search, X } from 'lucide-react';
 import StoreHeader from './components/StoreHeader.jsx';
 import StoreFooter from './components/StoreFooter.jsx';
 import useScrollReveal from './useScrollReveal.js';
@@ -57,7 +57,7 @@ function Catalog() {
       </section>
       <section className="catalog-tools" aria-label="Filtrar catálogo">
         <div className="filter-row">{filters.map(([value, label]) => <button key={value} type="button" className={`catalog-filter ${category === value ? 'active' : ''}`} aria-pressed={category === value} onClick={() => setCategory(value)}>{label}</button>)}</div>
-        <label className="catalog-search"><input aria-label="Buscar por nombre de prenda" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar…" /></label>
+        <label className="catalog-search"><Search size={17} strokeWidth={1.8} aria-hidden="true" /><input aria-label="Buscar por nombre de prenda" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar…" /></label>
       </section>
       <div className="catalog-results"><p>{visibleProducts.length} prendas</p><div className="catalog-price-tools"><label htmlFor="catalog-currency">Moneda</label><select id="catalog-currency" value={currency} onChange={(event) => setStoreCurrency(event.target.value)} aria-label="Elegir moneda"><option value="PEN">PEN · S/</option><option value="USD">USD · $</option></select><span className="currency-note">USD referencial</span></div></div>
       <section className="product-grid catalog-product-grid" aria-label="Productos del catálogo">

@@ -35,3 +35,4 @@ html[data-theme="dark"] .cart-checkout{background:#117a3b;color:#fff}
 html[data-theme="dark"] .cart-checkout:hover{background:#168044}
 @media(max-width:800px){.cart-page{padding:42px 20px 65px}.cart-heading{align-items:flex-start;flex-direction:column;margin-bottom:27px}.cart-layout{grid-template-columns:1fr;gap:25px}.cart-item{grid-template-columns:90px minmax(0,1fr);gap:14px;padding:14px 0}.cart-item>img{width:90px;height:112px}.cart-remove{grid-column:2;justify-self:start}.cart-summary{padding:20px}}
 .cart-page{padding-top:170px}
+@media(max-width:800px){.cart-page{padding-top:24px}}

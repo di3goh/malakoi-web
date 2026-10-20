@@ -21,3 +21,4 @@ html[data-theme="dark"] .faq-item summary svg{color:#c1c1c7}
 @media(max-width:650px){.faq-page{min-height:calc(100vh - 102px);padding:48px 20px 68px}.faq-item summary{min-height:66px;font-size:15px}.faq-item>p{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.faq-item summary svg{transition:none}.faq-item>p{animation:none}}
 .faq-page{padding-top:170px}
+@media(max-width:800px){.faq-page{padding-top:24px}}

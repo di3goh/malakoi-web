@@ -51,5 +51,5 @@ html[data-theme="dark"] .quantity-control button:hover{background:#303036;color:
 .product-main-photo{height:min(58vw,680px)}
 .product-detail-copy{position:static;top:auto;align-self:start}
 @media(max-width:850px){.product-main-photo{height:min(55vw,590px)}}
-@media(max-width:800px){.product-page{padding-top:154px}}
+@media(max-width:800px){.product-page{padding-top:24px}}
 @media(max-width:650px){.product-page{padding-top:24px}.product-gallery{margin-top:0}.product-main-photo{height:min(92vw,520px)}}
