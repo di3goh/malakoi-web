@@ -444,7 +444,7 @@ html.theme-transitioning *,html.theme-transitioning *::before,html.theme-transit
 html[data-theme="dark"] .swatch,html[data-theme="dark"] .home-product-swatch,html[data-theme="dark"] .product-color-dot{border:1px solid rgba(255,255,255,.9)!important;box-shadow:0 0 0 1px rgba(0,0,0,.38)}
 html[data-theme="dark"] .home-product-card .home-product-swatch{border:0!important;outline:0;box-shadow:0 0 0 2px rgba(255,255,255,.14),0 0 5px rgba(255,255,255,.12)!important}
 @media(max-width:800px){
-  html[data-theme="dark"] body .site-header .primary-nav,html[data-theme="dark"] body .site-header .primary-nav.is-open{left:50%!important;right:auto!important;width:100vw!important;margin-left:-50vw!important;background:transparent!important;border-color:transparent!important;box-shadow:none!important}
+  html[data-theme="dark"] body .site-header .primary-nav,html[data-theme="dark"] body .site-header .primary-nav.is-open{left:50%!important;right:auto!important;width:100vw!important;margin-left:-50vw!important;background:#19191c!important;border-color:#303034!important;box-shadow:0 12px 22px rgba(0,0,0,.35)!important}
   html[data-theme="dark"] body .site-header .primary-nav a{background:transparent!important}
 }
 
